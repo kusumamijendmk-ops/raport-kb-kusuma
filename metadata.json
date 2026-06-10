@@ -1,0 +1,8 @@
+{
+  "name": "Raport PAUD Kusuma",
+  "description": "Aplikasi pencatatan, penilaian, dan cetak raport digital untuk Pendidikan Anak Usia Dini (PAUD) yang mendukung Intrakurikuler, Kokurikuler (Projek P5), Catatan Anak, Kehadiran, serta didukung AI Assistant untuk penyusunan catatan perkembangan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

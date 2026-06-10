@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() { 
+      return isSignedIn() && (
+         request.auth.token.email == "kusumamijen.dmk@gmail.com" ||
+         request.auth.token.email == "admin@paud.local" ||
+         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin")
+      ); 
+    }
+    function isGuru() { return isSignedIn() && (isAdmin() || (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "guru")); }
+    
+    // Users
+    match /users/{userId} {
+      allow get: if isSignedIn() || userId == "admin_anchor" || userId.matches("^temp_.*");
+      allow list: if isSignedIn();
+      allow create, update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isSignedIn() && (request.auth.uid == userId || isAdmin() || (userId.matches("^temp_.*") && resource.data.email == request.auth.token.email));
+    }
+
+    // Academic Data
+    match /kelas/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /siswa/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isGuru();
+    }
+    match /tujuanPembelajaran/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /kategoriIntrakurikuler/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /subdimensiKokurikuler/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /nilaiIntrakurikuler/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isGuru();
+    }
+    match /nilaiKokurikuler/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isGuru();
+    }
+    match /catatanAnak/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isGuru();
+    }
+    match /kehadiran/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isGuru();
+    }
+    match /labelP5/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    match /dataSekolah/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

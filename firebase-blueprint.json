@@ -1,0 +1,203 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Model data pengguna / staf pendidik",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "ID unik user Firebase Auth" },
+        "email": { "type": "string", "description": "Email pendidik" },
+        "role": { "type": "string", "enum": ["admin", "guru"], "description": "Peran pengguna dalam aplikasi" },
+        "nama": { "type": "string", "description": "Nama lengkap pendidik" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Kelas": {
+      "title": "Kelas",
+      "description": "Model data Kelompok Kelas PAUD",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik kelas" },
+        "namaKelas": { "type": "string", "description": "Nama kelompok kelas" },
+        "waliKelas": { "type": "string", "description": "Nama pendidik / wali kelas" },
+        "nuptkNgty": { "type": "string", "description": "NUPTK / No Pegawai wali kelas" }
+      },
+      "required": ["id", "namaKelas"]
+    },
+    "Siswa": {
+      "title": "Siswa",
+      "description": "Model data siswa PAUD",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik siswa" },
+        "namaSiswa": { "type": "string", "description": "Nama lengkap anak didik" },
+        "nik": { "type": "string", "description": "NIK siswa" },
+        "alamat": { "type": "string", "description": "Alamat tinggal" },
+        "namaOrtu": { "type": "string", "description": "Nama orang tua / wali" },
+        "pekerjaanOrtu": { "type": "string", "description": "Pekerjaan orang tua" },
+        "noHp": { "type": "string", "description": "No handphone aktif" },
+        "tglLahir": { "type": "string", "description": "Tanggal lahir anak (YYYY-MM-DD)" },
+        "tempatLahir": { "type": "string", "description": "Tempat lahir anak" },
+        "anakKe": { "type": "number", "description": "Anak ke-berapa dalam keluarga" },
+        "tb": { "type": "string", "description": "Tinggi badan (cm)" },
+        "bb": { "type": "string", "description": "Berat badan (kg)" },
+        "agama": { "type": "string", "description": "Agama anak" },
+        "idKelas": { "type": "string", "description": "ID Kelompok Kelas yang diikuti" }
+      },
+      "required": ["id", "namaSiswa", "idKelas"]
+    },
+    "KategoriIntrakurikuler": {
+      "title": "KategoriIntrakurikuler",
+      "description": "Kategori lingkup materi intrakurikuler",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik kategori" },
+        "namaKategori": { "type": "string", "description": "Nama kategori" }
+      },
+      "required": ["id", "namaKategori"]
+    },
+    "LabelP5": {
+      "title": "LabelP5",
+      "description": "Label tingkat capaian Projek P5",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "namaLabel": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["id", "namaLabel", "order"]
+    },
+    "TujuanPembelajaran": {
+      "title": "TujuanPembelajaran",
+      "description": "Butir Tujuan Pembelajaran intrakurikuler",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik butir pembelajaran" },
+        "idKategori": { "type": "string", "description": "ID Kategori (KAT-01, KAT-02, KAT-03)" },
+        "deskripsi": { "type": "string", "description": "Redaksi deskripsi capaian pembelajaran" },
+        "idKelas": { "type": "string", "description": "ID Kelas terkait" }
+      },
+      "required": ["id", "idKategori", "deskripsi", "idKelas"]
+    },
+    "SubdimensiKokurikuler": {
+      "title": "SubdimensiKokurikuler",
+      "description": "Subdimensi P5 kokurikuler",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID unik subdimensi" },
+        "namaSubdimensi": { "type": "string", "description": "Deskripsi dimensi/subdimensi P5" },
+        "idKelas": { "type": "string", "description": "ID Kelas terkait" }
+      },
+      "required": ["id", "namaSubdimensi", "idKelas"]
+    },
+    "NilaiIntrakurikuler": {
+      "title": "NilaiIntrakurikuler",
+      "description": "Format nilai capaian intrakurikuler siswa",
+      "type": "object",
+      "properties": {
+        "idSiswa": { "type": "string", "description": "ID Siswa" },
+        "idTp": { "type": "string", "description": "ID Tujuan Pembelajaran" },
+        "nilai": { "type": "string", "enum": ["Berkembang", "Cakap", "Mahir", ""], "description": "Predikat nilai kualitatif" }
+      },
+      "required": ["idSiswa", "idTp", "nilai"]
+    },
+    "NilaiKokurikuler": {
+      "title": "NilaiKokurikuler",
+      "description": "Format nilai capaian kokurikuler (P5) siswa",
+      "type": "object",
+      "properties": {
+        "idSiswa": { "type": "string", "description": "ID Siswa" },
+        "idSubdimensi": { "type": "string", "description": "ID Subdimensi P5" },
+        "nilai": { "type": "string", "enum": ["Berkembang", "Cakap", "Mahir", ""], "description": "Predikat nilai kualitatif" }
+      },
+      "required": ["idSiswa", "idSubdimensi", "nilai"]
+    },
+    "CatatanAnak": {
+      "title": "CatatanAnak",
+      "description": "Teks narasi deskripsi raport kualitatif",
+      "type": "object",
+      "properties": {
+        "idSiswa": { "type": "string", "description": "ID Siswa" },
+        "catatan": { "type": "string", "description": "Paragraf ulasan deskriptif" }
+      },
+      "required": ["idSiswa", "catatan"]
+    },
+    "Kehadiran": {
+      "title": "Kehadiran",
+      "description": "Rekapitulasi ketidakhadiran siswa",
+      "type": "object",
+      "properties": {
+        "idSiswa": { "type": "string", "description": "ID Siswa" },
+        "sakit": { "type": "number", "description": "Jumlah hari sakit" },
+        "ijin": { "type": "number", "description": "Jumlah hari ijin" },
+        "tanpaKet": { "type": "number", "description": "Jumlah hari tanpa keterangan" }
+      },
+      "required": ["idSiswa", "sakit", "ijin", "tanpaKet"]
+    },
+    "DataSekolah": {
+      "title": "DataSekolah",
+      "description": "Metadata profil sekolah",
+      "type": "object",
+      "properties": {
+        "namaSekolah": { "type": "string" },
+        "alamat": { "type": "string" },
+        "kepalaSekolah": { "type": "string" },
+        "logo": { "type": "string" },
+        "semester": { "type": "string" },
+        "thAjaran": { "type": "string" },
+        "tglRaport": { "type": "string" }
+      },
+      "required": ["namaSekolah", "alamat", "kepalaSekolah", "semester", "thAjaran", "tglRaport"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Koleksi data pengguna sekolah"
+    },
+    "/kelas/{kelasId}": {
+      "schema": "Kelas",
+      "description": "Koleksi kelompok kelas"
+    },
+    "/siswa/{siswaId}": {
+      "schema": "Siswa",
+      "description": "Koleksi data anak didik"
+    },
+    "/tujuanPembelajaran/{tpId}": {
+      "schema": "TujuanPembelajaran",
+      "description": "Koleksi butir tujuan pembelajaran"
+    },
+    "/subdimensiKokurikuler/{subId}": {
+      "schema": "SubdimensiKokurikuler",
+      "description": "Koleksi subdimensi P5 kokurikuler"
+    },
+    "/nilaiIntrakurikuler/{nilaiId}": {
+      "schema": "NilaiIntrakurikuler",
+      "description": "Koleksi nilai intrakurikuler siswa"
+    },
+    "/nilaiKokurikuler/{nilaiId}": {
+      "schema": "NilaiKokurikuler",
+      "description": "Koleksi nilai kokurikuler siswa"
+    },
+    "/catatanAnak/{catatanId}": {
+      "schema": "CatatanAnak",
+      "description": "Koleksi deskripsi kualitatif / catatan rapor"
+    },
+    "/kehadiran/{kehadiranId}": {
+      "schema": "Kehadiran",
+      "description": "Koleksi kehadiran/absensi siswa"
+    },
+    "/labelP5/{labelId}": {
+      "schema": "LabelP5",
+      "description": "Koleksi label capaian P5"
+    },
+    "/kategoriIntrakurikuler/{katId}": {
+      "schema": "KategoriIntrakurikuler",
+      "description": "Koleksi kategori tujuan pembelajaran intrakurikuler"
+    },
+    "/dataSekolah/{docId}": {
+      "schema": "DataSekolah",
+      "description": "Koleksi konfigurasi data sekolah tunggal"
+    }
+  }
+}
