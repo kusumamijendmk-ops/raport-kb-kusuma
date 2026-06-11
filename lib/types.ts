@@ -3,6 +3,7 @@ export interface Kelas {
   namaKelas: string;
   waliKelas: string;
   nuptkNgty: string;
+  thAjaran?: string;
 }
 
 export interface Siswa {
@@ -23,6 +24,7 @@ export interface Siswa {
   bb: string; // Berat Badan
   agama: string;
   idKelas: string;
+  thAjaran?: string;
 }
 
 export interface KategoriIntrakurikuler {
@@ -36,6 +38,7 @@ export interface TujuanPembelajaran {
   deskripsi: string;
   idKelas: string; // Filter per class
   aktivitasMetode?: string; // Aktivitas / Metode
+  thAjaran?: string;
 }
 
 export interface LabelP5 {
@@ -54,6 +57,7 @@ export interface SubdimensiKokurikuler {
   descBerkembang?: string;
   descCakap?: string;
   descMahir?: string;
+  thAjaran?: string;
 }
 
 export interface NilaiIntrakurikuler {
@@ -61,6 +65,8 @@ export interface NilaiIntrakurikuler {
   idTp: string;
   nilai: string; // Dinamis berdasarkan label
   deskripsi?: string; // Qualitative assessment per TP
+  thAjaran?: string;
+  semester?: string;
 }
 
 export interface NilaiKokurikuler {
@@ -68,11 +74,15 @@ export interface NilaiKokurikuler {
   idSubdimensi: string;
   nilai: string; // Dinamis berdasarkan label
   deskripsi?: string; // Qualitative assessment per Subdimensi
+  thAjaran?: string;
+  semester?: string;
 }
 
 export interface CatatanAnak {
   idSiswa: string;
   catatan: string;
+  thAjaran?: string;
+  semester?: string;
 }
 
 export interface Kehadiran {
@@ -80,6 +90,8 @@ export interface Kehadiran {
   sakit: number;
   ijin: number;
   tanpaKet: number;
+  thAjaran?: string;
+  semester?: string;
 }
 
 export interface DataSekolah {

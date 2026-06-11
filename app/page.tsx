@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { 
   Home, Users, GraduationCap, BookOpen, PenTool, Printer, Settings, Plus, Trash2, 
   Sparkles, Download, Upload, Check, Search, Award, CheckCircle, 
@@ -66,7 +66,7 @@ export default function RaportPAUD() {
   const [newTeacherPassword, setNewTeacherPassword] = useState("");
   const [newTeacherRole, setNewTeacherRole] = useState<"admin" | "guru">("guru");
 
-  const [state, setState] = useState<AppState>({
+  const [rawState, setState] = useState<AppState>({
     kelas: [],
     siswa: [],
     kategoriIntrakurikuler: initialKategoriIntrakurikuler,
@@ -90,6 +90,27 @@ export default function RaportPAUD() {
       aiModel: "llama-3.3-70b-versatile"
     }
   });
+
+  const state = useMemo(() => {
+    const th = rawState.dataSekolah?.thAjaran || "2025/2026";
+    const sem = rawState.dataSekolah?.semester || "1 (Ganjil)";
+
+    const matchThAjaran = (itemTh?: string) => {
+      return itemTh === th || (!itemTh && th === "2025/2026");
+    };
+
+    return {
+      ...rawState,
+      kelas: rawState.kelas.filter(k => matchThAjaran(k.thAjaran)),
+      siswa: rawState.siswa.filter(s => matchThAjaran(s.thAjaran)),
+      tujuanPembelajaran: rawState.tujuanPembelajaran.filter(tp => matchThAjaran(tp.thAjaran)),
+      subdimensiKokurikuler: rawState.subdimensiKokurikuler.filter(sub => matchThAjaran(sub.thAjaran)),
+      nilaiIntrakurikuler: rawState.nilaiIntrakurikuler.filter(n => n.thAjaran === th && n.semester === sem),
+      nilaiKokurikuler: rawState.nilaiKokurikuler.filter(n => n.thAjaran === th && n.semester === sem),
+      catatanAnak: rawState.catatanAnak.filter(c => c.thAjaran === th && c.semester === sem),
+      kehadiran: rawState.kehadiran.filter(k => k.thAjaran === th && k.semester === sem),
+    };
+  }, [rawState]);
 
   const isAdmin = currentUserProfile?.role === "admin" || 
                   currentUser?.email === "kusumamijen.dmk@gmail.com" || 
@@ -118,6 +139,7 @@ export default function RaportPAUD() {
   const [selectedKelasFilterKehadiran, setSelectedKelasFilterKehadiran] = useState<string>("");
   const [selectedSiswaIdKehadiran, setSelectedSiswaIdKehadiran] = useState<string>("");
   const [selectedSiswaIdCatatan, setSelectedSiswaIdCatatan] = useState<string>("");
+  const [tahunSumberAmbil, setTahunSumberAmbil] = useState<string>("");
 
   // Modals / Input toggles
   const [showAddSiswa, setShowAddSiswa] = useState(false);
@@ -744,9 +766,10 @@ export default function RaportPAUD() {
     }
 
     try {
+      const activeTh = state.dataSekolah.thAjaran || "2025/2026";
       if (editingKelas) {
         const docRef = doc(db, "kelas", editingKelas.id);
-        await setDoc(docRef, { ...editingKelas, ...kelasForm });
+        await setDoc(docRef, { ...editingKelas, ...kelasForm, thAjaran: activeTh });
         setEditingKelas(null);
       } else {
         const id = "K-" + Date.now();
@@ -755,7 +778,8 @@ export default function RaportPAUD() {
           id,
           namaKelas: kelasForm.namaKelas,
           waliKelas: kelasForm.waliKelas,
-          nuptkNgty: kelasForm.nuptkNgty
+          nuptkNgty: kelasForm.nuptkNgty,
+          thAjaran: activeTh
         };
         await setDoc(docRef, newK);
       }
@@ -877,6 +901,9 @@ export default function RaportPAUD() {
 
         const newId = isUpdate ? String(idSiswa) : `siswa-${Date.now()}-${Math.floor(Math.random()*1000)}`;
 
+        const activeTh = state.dataSekolah.thAjaran || "2025/2026";
+        const activeSem = state.dataSekolah.semester || "1 (Ganjil)";
+
         const newS: Siswa = {
           id: newId,
           namaSiswa: String(row["Nama Siswa"] || ""),
@@ -895,14 +922,23 @@ export default function RaportPAUD() {
           bb: String(row["Berat Badan"] || ""),
           agama: String(row["Agama"] || ""),
           idKelas: String(idKelas || ""),
+          thAjaran: activeTh
         };
 
         const docRef = doc(db, "siswa", newId);
         await setDoc(docRef, newS);
 
         if (!isUpdate) {
-          const attRef = doc(db, "kehadiran", newId);
-          await setDoc(attRef, { idSiswa: newId, sakit: 0, ijin: 0, tanpaKet: 0 });
+          const attId = `${newId}_${activeTh.replace(/\//g, "-")}_${activeSem}`;
+          const attRef = doc(db, "kehadiran", attId);
+          await setDoc(attRef, {
+            idSiswa: newId,
+            sakit: 0,
+            ijin: 0,
+            tanpaKet: 0,
+            thAjaran: activeTh,
+            semester: activeSem
+          });
         }
 
         if (isUpdate) countUpdate++;
@@ -928,9 +964,11 @@ export default function RaportPAUD() {
     }
 
     try {
+      const activeTh = state.dataSekolah.thAjaran || "2025/2026";
+      const activeSem = state.dataSekolah.semester || "1 (Ganjil)";
       if (editingSiswa) {
         const docRef = doc(db, "siswa", editingSiswa.id);
-        await setDoc(docRef, { ...editingSiswa, ...siswaForm as Siswa });
+        await setDoc(docRef, { ...editingSiswa, ...siswaForm as Siswa, thAjaran: activeTh });
         setEditingSiswa(null);
       } else {
         const id = "S-" + Date.now();
@@ -952,12 +990,21 @@ export default function RaportPAUD() {
           tb: siswaForm.tb || "100",
           bb: siswaForm.bb || "15",
           agama: siswaForm.agama || "Islam",
-          idKelas: siswaForm.idKelas || ""
+          idKelas: siswaForm.idKelas || "",
+          thAjaran: activeTh
         };
         await setDoc(docRef, newS);
-
-        const attRef = doc(db, "kehadiran", id);
-        await setDoc(attRef, { idSiswa: id, sakit: 0, ijin: 0, tanpaKet: 0 });
+ 
+        const attId = `${id}_${activeTh.replace(/\//g, "-")}_${activeSem}`;
+        const attRef = doc(db, "kehadiran", attId);
+        await setDoc(attRef, {
+          idSiswa: id,
+          sakit: 0,
+          ijin: 0,
+          tanpaKet: 0,
+          thAjaran: activeTh,
+          semester: activeSem
+        });
       }
 
       setSiswaForm({
@@ -1065,13 +1112,15 @@ export default function RaportPAUD() {
     }
 
     try {
+      const activeTh = state.dataSekolah.thAjaran || "2025/2026";
       if (editingTp) {
         const updatedTp: TujuanPembelajaran = {
           ...editingTp,
           idKategori: tpForm.idKategori,
           deskripsi: tpForm.deskripsi,
           idKelas: tpForm.idKelas,
-          aktivitasMetode: tpForm.aktivitasMetode
+          aktivitasMetode: tpForm.aktivitasMetode,
+          thAjaran: activeTh
         };
         await setDoc(doc(db, "tujuanPembelajaran", editingTp.id), updatedTp);
         showToast("Berhasil mengubah Tujuan Pembelajaran (TP)!", "success");
@@ -1083,7 +1132,8 @@ export default function RaportPAUD() {
           idKategori: tpForm.idKategori,
           deskripsi: tpForm.deskripsi,
           idKelas: tpForm.idKelas,
-          aktivitasMetode: tpForm.aktivitasMetode
+          aktivitasMetode: tpForm.aktivitasMetode,
+          thAjaran: activeTh
         };
         await setDoc(doc(db, "tujuanPembelajaran", id), newTp);
         showToast("Berhasil menambahkan Tujuan Pembelajaran (TP)!", "success");
@@ -1130,6 +1180,7 @@ export default function RaportPAUD() {
     }
 
     try {
+      const activeTh = state.dataSekolah.thAjaran || "2025/2026";
       const id = editingSub ? editingSub.id : ("SD-" + Date.now());
       const newSub: SubdimensiKokurikuler = {
         id,
@@ -1138,7 +1189,8 @@ export default function RaportPAUD() {
         descBerkembang: subForm.descBerkembang || "",
         descCakap: subForm.descCakap || "",
         descMahir: subForm.descMahir || "",
-        capaian: subForm.capaian || {}
+        capaian: subForm.capaian || {},
+        thAjaran: activeTh
       };
       await setDoc(doc(db, "subdimensiKokurikuler", id), newSub);
       setSubForm({ namaSubdimensi: "", idKelas: subForm.idKelas, descBerkembang: "", descCakap: "", descMahir: "", capaian: {} });
@@ -1208,7 +1260,9 @@ export default function RaportPAUD() {
   // --- ACTIONS: SAVE GRADES ---
   const handleSetGradeIntra = async (idSiswa: string, idTp: string, val: string) => {
     try {
-      const docId = `${idSiswa}_${idTp}`;
+      const th = state.dataSekolah.thAjaran || "2025/2026";
+      const sem = state.dataSekolah.semester || "1 (Ganjil)";
+      const docId = `${idSiswa}_${idTp}_${th.replace(/\//g, "-")}_${sem}`;
       const docRef = doc(db, "nilaiIntrakurikuler", docId);
       if (val === "") {
         // If we clear the grade, we might still want to keep the description, 
@@ -1221,7 +1275,7 @@ export default function RaportPAUD() {
           await deleteDoc(docRef);
         }
       } else {
-        await setDoc(docRef, { idSiswa, idTp, nilai: val }, { merge: true });
+        await setDoc(docRef, { idSiswa, idTp, nilai: val, thAjaran: th, semester: sem }, { merge: true });
       }
     } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, "nilaiIntrakurikuler");
@@ -1230,9 +1284,11 @@ export default function RaportPAUD() {
 
   const handleUpdateDescriptionIntra = async (idSiswa: string, idTp: string, text: string) => {
     try {
-      const docId = `${idSiswa}_${idTp}`;
+      const th = state.dataSekolah.thAjaran || "2025/2026";
+      const sem = state.dataSekolah.semester || "1 (Ganjil)";
+      const docId = `${idSiswa}_${idTp}_${th.replace(/\//g, "-")}_${sem}`;
       const docRef = doc(db, "nilaiIntrakurikuler", docId);
-      await setDoc(docRef, { idSiswa, idTp, deskripsi: text }, { merge: true });
+      await setDoc(docRef, { idSiswa, idTp, deskripsi: text, thAjaran: th, semester: sem }, { merge: true });
     } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, "nilaiIntrakurikuler/deskripsi");
     }
@@ -1240,7 +1296,9 @@ export default function RaportPAUD() {
 
   const handleSetGradeKokuri = async (idSiswa: string, idSubdimensi: string, val: string) => {
     try {
-      const docId = `${idSiswa}_${idSubdimensi}`;
+      const th = state.dataSekolah.thAjaran || "2025/2026";
+      const sem = state.dataSekolah.semester || "1 (Ganjil)";
+      const docId = `${idSiswa}_${idSubdimensi}_${th.replace(/\//g, "-")}_${sem}`;
       const docRef = doc(db, "nilaiKokurikuler", docId);
       if (val === "") {
         const snap = await getDoc(docRef);
@@ -1250,7 +1308,7 @@ export default function RaportPAUD() {
           await deleteDoc(docRef);
         }
       } else {
-        await setDoc(docRef, { idSiswa, idSubdimensi, nilai: val }, { merge: true });
+        await setDoc(docRef, { idSiswa, idSubdimensi, nilai: val, thAjaran: th, semester: sem }, { merge: true });
       }
     } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, "nilaiKokurikuler");
@@ -1259,9 +1317,11 @@ export default function RaportPAUD() {
 
   const handleUpdateDescriptionKokuri = async (idSiswa: string, idSubdimensi: string, text: string) => {
     try {
-      const docId = `${idSiswa}_${idSubdimensi}`;
+      const th = state.dataSekolah.thAjaran || "2025/2026";
+      const sem = state.dataSekolah.semester || "1 (Ganjil)";
+      const docId = `${idSiswa}_${idSubdimensi}_${th.replace(/\//g, "-")}_${sem}`;
       const docRef = doc(db, "nilaiKokurikuler", docId);
-      await setDoc(docRef, { idSiswa, idSubdimensi, deskripsi: text }, { merge: true });
+      await setDoc(docRef, { idSiswa, idSubdimensi, deskripsi: text, thAjaran: th, semester: sem }, { merge: true });
     } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, "nilaiKokurikuler/deskripsi");
     }
@@ -1358,7 +1418,10 @@ export default function RaportPAUD() {
   // --- ACTIONS: NOTES & AI ASSIST ---
   const handleSaveCatatan = async (idSiswa: string, text: string) => {
     try {
-      await setDoc(doc(db, "catatanAnak", idSiswa), { idSiswa, catatan: text });
+      const th = state.dataSekolah.thAjaran || "2025/2026";
+      const sem = state.dataSekolah.semester || "1 (Ganjil)";
+      const docId = `${idSiswa}_${th.replace(/\//g, "-")}_${sem}`;
+      await setDoc(doc(db, "catatanAnak", docId), { idSiswa, catatan: text, thAjaran: th, semester: sem });
     } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, "catatanAnak");
     }
@@ -1486,14 +1549,19 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
   // --- ACTIONS: ATTENDANCE ---
   const handleUpdateKehadiran = async (idSiswa: string, field: "sakit" | "ijin" | "tanpaKet", val: number) => {
     try {
+      const th = state.dataSekolah.thAjaran || "2025/2026";
+      const sem = state.dataSekolah.semester || "1 (Ganjil)";
+      const docId = `${idSiswa}_${th.replace(/\//g, "-")}_${sem}`;
       const current = state.kehadiran.find(k => k.idSiswa === idSiswa) || { sakit: 0, ijin: 0, tanpaKet: 0 };
       const nextVal = {
         idSiswa,
         sakit: field === "sakit" ? Math.max(0, val) : current.sakit,
         ijin: field === "ijin" ? Math.max(0, val) : current.ijin,
         tanpaKet: field === "tanpaKet" ? Math.max(0, val) : current.tanpaKet,
+        thAjaran: th,
+        semester: sem
       };
-      await setDoc(doc(db, "kehadiran", idSiswa), nextVal);
+      await setDoc(doc(db, "kehadiran", docId), nextVal);
     } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, "kehadiran");
     }
@@ -1574,6 +1642,174 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
       }
     };
     reader.readAsText(file);
+  };
+
+  const handleAmbilSiswa = async (tahunSumber: string) => {
+    if (!tahunSumber) {
+      alert("Pilih tahun pelajaran sumber terlebih dahulu!");
+      return;
+    }
+    const targetTh = state.dataSekolah.thAjaran || "2025/2026";
+    const activeSem = state.dataSekolah.semester || "1 (Ganjil)";
+
+    const oldKelasList = rawState.kelas.filter(k => k.thAjaran === tahunSumber);
+    const oldSiswaList = rawState.siswa.filter(s => s.thAjaran === tahunSumber);
+
+    if (oldSiswaList.length === 0) {
+      alert(`Tidak ditemukan data siswa pada tahun pelajaran ${tahunSumber}.`);
+      return;
+    }
+
+    try {
+      setDbLoading(true);
+      const classMap: Record<string, string> = {};
+      for (const oldK of oldKelasList) {
+        const existingK = state.kelas.find(k => k.namaKelas.toLowerCase() === oldK.namaKelas.toLowerCase());
+        if (existingK) {
+          classMap[oldK.id] = existingK.id;
+        } else {
+          const newKelasId = "K-" + Date.now() + Math.floor(Math.random() * 1000);
+          const newK: Kelas = {
+            id: newKelasId,
+            namaKelas: oldK.namaKelas,
+            waliKelas: oldK.waliKelas,
+            nuptkNgty: oldK.nuptkNgty,
+            thAjaran: targetTh
+          };
+          await setDoc(doc(db, "kelas", newKelasId), newK);
+          classMap[oldK.id] = newKelasId;
+        }
+      }
+
+      let countImport = 0;
+      for (const oldS of oldSiswaList) {
+        const targetClassId = classMap[oldS.idKelas] || (state.kelas[0]?.id || "");
+        const exists = state.siswa.some(s => s.namaSiswa.toLowerCase() === oldS.namaSiswa.toLowerCase() && s.idKelas === targetClassId);
+        if (exists) continue;
+
+        const newSiswaId = "S-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+        const newS: Siswa = {
+          ...oldS,
+          id: newSiswaId,
+          idKelas: targetClassId,
+          thAjaran: targetTh
+        };
+        await setDoc(doc(db, "siswa", newSiswaId), newS);
+
+        const attId = `${newSiswaId}_${targetTh.replace(/\//g, "-")}_${activeSem}`;
+        await setDoc(doc(db, "kehadiran", attId), {
+          idSiswa: newSiswaId,
+          sakit: 0,
+          ijin: 0,
+          tanpaKet: 0,
+          thAjaran: targetTh,
+          semester: activeSem
+        });
+
+        countImport++;
+      }
+
+      showToast(`Berhasil menyalin ${countImport} data siswa dari tahun pelajaran ${tahunSumber}!`, "success");
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyalin data siswa lama.");
+    } finally {
+      setDbLoading(false);
+    }
+  };
+
+  const handleAmbilIntrakurikuler = async (tahunSumber: string) => {
+    if (!tahunSumber) {
+      alert("Pilih tahun pelajaran sumber terlebih dahulu!");
+      return;
+    }
+    const targetTh = state.dataSekolah.thAjaran || "2025/2026";
+    const oldTpList = rawState.tujuanPembelajaran.filter(tp => tp.thAjaran === tahunSumber);
+
+    if (oldTpList.length === 0) {
+      alert(`Tidak ditemukan data butir intrakurikuler (TP) pada tahun pelajaran ${tahunSumber}.`);
+      return;
+    }
+
+    try {
+      setDbLoading(true);
+      let countImport = 0;
+
+      for (const oldTp of oldTpList) {
+        const oldClass = rawState.kelas.find(k => k.id === oldTp.idKelas);
+        if (!oldClass) continue;
+
+        const matchK = state.kelas.find(k => k.namaKelas.toLowerCase() === oldClass.namaKelas.toLowerCase());
+        if (!matchK) continue;
+
+        const exists = state.tujuanPembelajaran.some(tp => tp.idKelas === matchK.id && tp.deskripsi.toLowerCase() === oldTp.deskripsi.toLowerCase());
+        if (exists) continue;
+
+        const newTpId = "TP-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+        const newTp: TujuanPembelajaran = {
+          ...oldTp,
+          id: newTpId,
+          idKelas: matchK.id,
+          thAjaran: targetTh
+        };
+        await setDoc(doc(db, "tujuanPembelajaran", newTpId), newTp);
+        countImport++;
+      }
+
+      showToast(`Berhasil menyalin ${countImport} butir intrakurikuler dari tahun pelajaran ${tahunSumber}!`, "success");
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyalin data butir intrakurikuler.");
+    } finally {
+      setDbLoading(false);
+    }
+  };
+
+  const handleAmbilKokurikuler = async (tahunSumber: string) => {
+    if (!tahunSumber) {
+      alert("Pilih tahun pelajaran sumber terlebih dahulu!");
+      return;
+    }
+    const targetTh = state.dataSekolah.thAjaran || "2025/2026";
+    const oldSubList = rawState.subdimensiKokurikuler.filter(sub => sub.thAjaran === tahunSumber);
+
+    if (oldSubList.length === 0) {
+      alert(`Tidak ditemukan data butir kokurikuler pada tahun pelajaran ${tahunSumber}.`);
+      return;
+    }
+
+    try {
+      setDbLoading(true);
+      let countImport = 0;
+
+      for (const oldSub of oldSubList) {
+        const oldClass = rawState.kelas.find(k => k.id === oldSub.idKelas);
+        if (!oldClass) continue;
+
+        const matchK = state.kelas.find(k => k.namaKelas.toLowerCase() === oldClass.namaKelas.toLowerCase());
+        if (!matchK) continue;
+
+        const exists = state.subdimensiKokurikuler.some(sub => sub.idKelas === matchK.id && sub.namaSubdimensi.toLowerCase() === oldSub.namaSubdimensi.toLowerCase());
+        if (exists) continue;
+
+        const newSubId = "SD-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+        const newSub: SubdimensiKokurikuler = {
+          ...oldSub,
+          id: newSubId,
+          idKelas: matchK.id,
+          thAjaran: targetTh
+        };
+        await setDoc(doc(db, "subdimensiKokurikuler", newSubId), newSub);
+        countImport++;
+      }
+
+      showToast(`Berhasil menyalin ${countImport} butir kokurikuler dari tahun pelajaran ${tahunSumber}!`, "success");
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyalin data butir kokurikuler.");
+    } finally {
+      setDbLoading(false);
+    }
   };
 
   // --- FILTERED COMPUTATIONS ---
@@ -4710,6 +4946,74 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                             onChange={(e) => handleUpdateSchool("tglRaport", e.target.value)}
                             className="w-full text-xs border border-slate-300 px-3 py-1.5 rounded-lg font-medium focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 focus:outline-none"
                           />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* AMBIL DATA DARI TAHUN AJARAN LAIN */}
+                    <div className="md:col-span-2 pt-4 border-t border-slate-100">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ambil Data Pelajaran Lain</span>
+                        <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">Import Internal</span>
+                      </div>
+                      <p className="text-[11px] text-neutral-400 mb-3">
+                        Salin data master dari tahun ajaran sebelumnya agar tidak perlu menginput ulang dari awal.
+                      </p>
+                      
+                      <div className="flex flex-col sm:flex-row gap-3 items-center">
+                        <div className="w-full sm:w-1/3">
+                          <label className="block text-[9px] font-bold text-slate-500 uppercase mb-1">Pilih Tahun Ajaran Sumber</label>
+                          <select
+                            value={tahunSumberAmbil}
+                            onChange={(e) => setTahunSumberAmbil(e.target.value)}
+                            className="w-full text-xs border border-slate-300 px-2.5 py-1.5 rounded-lg bg-white font-bold text-slate-700 focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 focus:outline-none"
+                          >
+                            <option value="">-- Pilih Tahun --</option>
+                            {Array.from(new Set([
+                              ...rawState.siswa.map(s => s.thAjaran),
+                              ...rawState.tujuanPembelajaran.map(tp => tp.thAjaran),
+                              ...rawState.subdimensiKokurikuler.map(sub => sub.thAjaran),
+                              "2024/2025",
+                              "2025/2026"
+                            ].filter(Boolean) as string[]))
+                              .filter(y => y !== (state.dataSekolah.thAjaran))
+                              .map(year => (
+                                <option key={year} value={year}>{year}</option>
+                              ))
+                            }
+                          </select>
+                        </div>
+                        
+                        <div className="w-full sm:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-2 pt-4 sm:pt-0">
+                          <button
+                            type="button"
+                            onClick={() => handleAmbilSiswa(tahunSumberAmbil)}
+                            disabled={!tahunSumberAmbil}
+                            className="text-xs px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed text-indigo-700 font-bold border border-indigo-200 rounded-lg shadow-2xs transition active:scale-95 flex items-center justify-center gap-1.5"
+                          >
+                            <Users className="w-3.5 h-3.5" />
+                            Siswa Lama
+                          </button>
+                          
+                          <button
+                            type="button"
+                            onClick={() => handleAmbilIntrakurikuler(tahunSumberAmbil)}
+                            disabled={!tahunSumberAmbil}
+                            className="text-xs px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed text-emerald-700 font-bold border border-emerald-200 rounded-lg shadow-2xs transition active:scale-95 flex items-center justify-center gap-1.5"
+                          >
+                            <Folder className="w-3.5 h-3.5" />
+                            Intrakurikuler
+                          </button>
+                          
+                          <button
+                            type="button"
+                            onClick={() => handleAmbilKokurikuler(tahunSumberAmbil)}
+                            disabled={!tahunSumberAmbil}
+                            className="text-xs px-3 py-1.5 bg-sky-50 hover:bg-sky-100 disabled:opacity-50 disabled:cursor-not-allowed text-sky-700 font-bold border border-sky-200 rounded-lg shadow-2xs transition active:scale-95 flex items-center justify-center gap-1.5"
+                          >
+                            <Award className="w-3.5 h-3.5" />
+                            Kokurikuler
+                          </button>
                         </div>
                       </div>
                     </div>
