@@ -2037,32 +2037,45 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           @page {
-            size: 8.5in 13in;
-            margin: 1cm !important;
+            size: A4;
+            margin: 1.5cm !important;
           }
           body {
             font-family: Arial, sans-serif !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          .print-container {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+            display: block !important;
           }
           .print-arial-large {
             font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
           }
           .print-arial-large table {
-            font-size: 12pt !important;
+            font-size: 11pt !important;
             font-family: Arial, sans-serif !important;
           }
           .print-arial-large th, .print-arial-large td {
-            font-size: 11pt !important;
-            padding-top: 6px !important;
-            padding-bottom: 6px !important;
+            font-size: 10pt !important;
+            padding-top: 4px !important;
+            padding-bottom: 4px !important;
             font-family: Arial, sans-serif !important;
           }
           .print-arial-large p, .print-arial-large italic {
-            font-size: 13pt !important;
+            font-size: 11pt !important;
             font-family: Arial, sans-serif !important;
           }
           .print-arial-large h3, .print-arial-large h4 {
-            font-size: 15pt !important;
+            font-size: 13pt !important;
             font-family: Arial, sans-serif !important;
+          }
+          .keep-together {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
         }
       `}} />
@@ -4588,7 +4601,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className="print-page-break bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[296mm] print:w-[210mm] print:border-none print:shadow-none print:p-14 print:m-0 animate-fade-in font-sans relative">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Frame with Double Border for Classic Cover Look */}
                         <div className="absolute inset-4 border-2 border-slate-950 rounded-xl pointer-events-none p-1 print:inset-6">
                           <div className="w-full h-full border border-slate-300 rounded-lg"></div>
@@ -4661,7 +4674,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                       {/* PAGE 2: BIODATA PAGE (KETERANGAN DIRI) */}
-                      <div className="print-page-break bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-0 print:h-[296mm] print:w-[210mm] print:border-none print:shadow-none print:p-14 print:m-0 animate-fade-in font-sans relative">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Border */}
                         <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-6"></div>
 
@@ -4788,14 +4801,14 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                            {/* INTRAKURIKULER SECTION: CONTINUOUS FLOW */}
-                      <div className="print-page-break bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-[210mm] print:border-none print:shadow-none print:p-9 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
                         <div className="absolute inset-4 border border-slate-150 rounded-xl pointer-events-none print:hidden"></div>
 
                         <div className="z-10 space-y-6">
                             <div>
                                 {renderPageHeader("Laporan Hasil Perkembangan Peserta Didik", "Pendidikan Anak Usia Dini (PAUD) - Intrakurikuler")}
 
-                                <div className="space-y-10">
+                                <div className="space-y-6">
                                     {state.kategoriIntrakurikuler.map((kat, katIdx) => {
                                         const catTps = activeTps.filter(tp => tp.idKategori === kat.id);
                                         const catAssessment = state.nilaiIntrakurikuler.find(n => n.idSiswa === printSiswa.id && n.idTp === kat.id);
@@ -4986,7 +4999,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION V: SIGNATURE BLOCK */}
-                                <div className="pt-8 border-t border-slate-150 grid grid-cols-2 gap-y-12 text-center text-sm text-slate-900 leading-relaxed max-w-2xl mx-auto w-full keep-together mt-8">
+                                <div className="pt-6 border-t border-slate-150 grid grid-cols-2 gap-y-8 text-center text-sm text-slate-900 leading-relaxed max-w-2xl mx-auto w-full keep-together mt-6">
                                     {/* Top Left: Orang Tua */}
                                     <div className="flex flex-col items-center justify-between">
                                         <p className="mb-16">Mengetahui,<br />Orang Tua/Wali,</p>
