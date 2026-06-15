@@ -13,7 +13,7 @@
   /* Dynamic styles for printing standard report forms */
   @page {
     size: A4 portrait;
-    margin: 0px !important;
+    margin: 2cm !important;
   }
 
   @media print {

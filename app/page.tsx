@@ -2047,7 +2047,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
         @media print {
           @page {
             size: A4 portrait;
-            margin: 1.5cm !important;
+            margin: 2cm !important;
           }
           body {
             font-family: Arial, sans-serif !important;
@@ -4618,7 +4618,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[267mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative overflow-hidden">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative overflow-hidden">
                         {/* Outer Frame with Double Border for Classic Cover Look */}
                         <div className="absolute inset-4 border-2 border-slate-950 rounded-xl pointer-events-none p-1 print:inset-4">
                           <div className="w-full h-full border border-slate-300 rounded-lg"></div>
@@ -4691,7 +4691,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                       {/* PAGE 2: BIODATA PAGE (KETERANGAN DIRI) */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-0 print:h-[267mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative overflow-hidden">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative overflow-hidden">
                         {/* Outer Border */}
                         <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-4"></div>
 
@@ -4818,7 +4818,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                            {/* INTRAKURIKULER SECTION: CONTINUOUS FLOW */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
+                      <div className="print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
                         <div className="absolute inset-4 border border-slate-150 rounded-xl pointer-events-none print:hidden"></div>
 
                         <div className="z-10 space-y-6">
@@ -4906,7 +4906,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION II: KOKURIKULER (P5 PANEL) */}
-                                <div className="space-y-3 pt-6 keep-together">
+                                <div className="space-y-3 pt-6">
                                     <div className="border-l-4 border-indigo-650 pl-3 bg-slate-50 py-1.5 rounded-r">
                                         <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
                                             II. Capaian Kokurikuler (Projek Penguatan Profil Pelajar Pancasila - P5)
@@ -4970,7 +4970,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION III: CATATAN GURU WALI KELAS */}
-                                <div className="space-y-2 pt-6 keep-together">
+                                <div className="space-y-2 pt-6">
                                     <div className="border-l-4 border-indigo-700 pl-3 bg-slate-50 py-1 rounded-r">
                                         <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
                                             III. Catatan Guru Wali Kelas
@@ -4982,7 +4982,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION IV: KEHADIRAN (REKAPITULASI ABSENSI SEMESTER) */}
-                                <div className="space-y-2.5 pt-6 keep-together">
+                                <div className="space-y-2.5 pt-6">
                                     <div className="border-l-4 border-indigo-700 pl-3 bg-slate-50 py-1 rounded-r">
                                         <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
                                             IV. Kehadiran (Rekapitulasi Absensi Semester)
