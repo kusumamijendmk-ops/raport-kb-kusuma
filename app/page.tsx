@@ -78,6 +78,15 @@ const excelDateToIsoString = (val: any): string => {
   return str;
 };
 
+const cleanName = (name: string): string => {
+  if (!name) return "";
+  return name
+    .replace(/\bS\.PD\.?$/gi, "S.Pd.")
+    .replace(/\bS\.PD\.?\s/gi, "S.Pd. ")
+    .replace(/\bS\.P\.?\s/gi, "S.P. ")
+    .replace(/\bS\.TH\.I\.?$/gi, "S.Th.I.");
+};
+
 const formatIndonesianDate = (dateStr: string, fallbackDefault?: string): string => {
   if (!dateStr) return fallbackDefault !== undefined ? fallbackDefault : "19 Desember 2025";
   
@@ -2037,13 +2046,15 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           @page {
-            size: A4;
+            size: A4 portrait;
             margin: 1.5cm !important;
           }
           body {
             font-family: Arial, sans-serif !important;
             margin: 0 !important;
             padding: 0 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
           }
           .print-container {
             width: 100% !important;
@@ -2051,6 +2062,10 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
             margin: 0 auto !important;
             padding: 0 !important;
             display: block !important;
+            border: none !important;
+            box-shadow: none !important;
+            position: relative !important;
+            overflow: visible !important;
           }
           .print-arial-large {
             font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
@@ -2061,8 +2076,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
           }
           .print-arial-large th, .print-arial-large td {
             font-size: 10pt !important;
-            padding-top: 4px !important;
-            padding-bottom: 4px !important;
+            padding: 6px 8px !important;
             font-family: Arial, sans-serif !important;
           }
           .print-arial-large p, .print-arial-large italic {
@@ -2076,6 +2090,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
           .keep-together {
             break-inside: avoid !important;
             page-break-inside: avoid !important;
+          }
+          .no-print {
+            display: none !important;
           }
         }
       `}} />
@@ -4601,9 +4618,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[267mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative overflow-hidden">
                         {/* Outer Frame with Double Border for Classic Cover Look */}
-                        <div className="absolute inset-4 border-2 border-slate-950 rounded-xl pointer-events-none p-1 print:inset-6">
+                        <div className="absolute inset-4 border-2 border-slate-950 rounded-xl pointer-events-none p-1 print:inset-4">
                           <div className="w-full h-full border border-slate-300 rounded-lg"></div>
                         </div>
 
@@ -4674,9 +4691,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                       {/* PAGE 2: BIODATA PAGE (KETERANGAN DIRI) */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-0 print:h-[267mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative overflow-hidden">
                         {/* Outer Border */}
-                        <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-6"></div>
+                        <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-4"></div>
 
                         <div className="z-10 space-y-6">
                           <div className="text-center space-y-2 pb-2 border-b border-slate-100">
@@ -4781,18 +4798,18 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                             </div>
 
                             {/* Signature stamp mock */}
-                            <div className="text-center flex flex-col items-center justify-between h-[140px] w-64 pr-2">
+                            <div className="text-center flex flex-col items-center justify-between h-[150px] w-64 pr-2">
                               <div className="space-y-1">
-                                <p className="text-xs text-slate-900 font-medium">
+                                <p className="text-sm text-slate-900 font-medium">
                                   {printCity}, {formatIndonesianDate(state.dataSekolah.tglRaport)}
                                 </p>
-                                <p className="text-xs font-bold text-slate-900">
+                                <p className="text-sm font-bold text-slate-900">
                                   Kepala Sekolah
                                 </p>
                               </div>
                               <div className="w-full">
-                                <strong className="text-xs font-black text-slate-950 underline decoration-slate-900 underline-offset-4 block font-mono leading-none pb-1">
-                                  {(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.").replace(/S\.PD\.?$/gi, "S.Pd.")}
+                                <strong className="text-sm font-black text-slate-950 underline decoration-slate-900 underline-offset-4 block leading-none pb-1">
+                                  {cleanName(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.")}
                                 </strong>
                               </div>
                             </div>
@@ -4806,7 +4823,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
 
                         <div className="z-10 space-y-6">
                             <div>
-                                {renderPageHeader("Laporan Hasil Perkembangan Peserta Didik", "Pendidikan Anak Usia Dini (PAUD) - Intrakurikuler")}
+                                {renderPageHeader("Laporan Hasil Perkembangan Peserta Didik", "Pendidikan Anak Usia Dini (PAUD)")}
 
                                 <div className="space-y-6">
                                     {state.kategoriIntrakurikuler.map((kat, katIdx) => {
@@ -5002,19 +5019,19 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 <div className="pt-6 border-t border-slate-150 grid grid-cols-2 gap-y-8 text-center text-sm text-slate-900 leading-relaxed max-w-2xl mx-auto w-full keep-together mt-6">
                                     {/* Top Left: Orang Tua */}
                                     <div className="flex flex-col items-center justify-between">
-                                        <p className="mb-16">Mengetahui,<br />Orang Tua/Wali,</p>
+                                        <p className="mb-14">Mengetahui,<br />Orang Tua/Wali,</p>
                                         <div className="border-b border-slate-900 w-3/4"></div>
                                     </div>
 
                                     {/* Top Right: Wali Kelas */}
                                     <div className="flex flex-col items-center justify-between">
-                                        <p className="mb-16">
+                                        <p className="mb-14">
                                             {printCity}, {formatIndonesianDate(state.dataSekolah.tglRaport)}<br />
                                             Wali Kelas,
                                         </p>
                                         <div>
                                             <p className="font-bold underline decoration-slate-900 underline-offset-2">
-                                                {(printKelasItem?.waliKelas || "WALIKELAS PAUD").replace(/S\.PD\.?$/gi, "S.Pd.")}
+                                                {cleanName(printKelasItem?.waliKelas || "WALIKELAS PAUD")}
                                             </p>
                                             <p>NUPTK: {printKelasItem?.nuptkNgty || "6359752654300053"}</p>
                                         </div>
@@ -5022,9 +5039,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
 
                                     {/* Bottom Center: Kepala Sekolah */}
                                     <div className="col-span-2 flex flex-col items-center justify-between mt-2">
-                                        <p className="mb-16">Mengetahui,<br />Kepala Sekolah</p>
+                                        <p className="mb-14">Mengetahui,<br />Kepala Sekolah</p>
                                         <p className="font-bold underline decoration-slate-900 underline-offset-2">
-                                            {(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.").replace(/S\.PD\.?$/gi, "S.Pd.")}
+                                            {cleanName(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.")}
                                         </p>
                                     </div>
                                 </div>
