@@ -24,26 +24,152 @@ import {
 
 import * as XLSX from "xlsx";
 
-const formatIndonesianDate = (dateStr: string): string => {
-  if (!dateStr) return "19 Desember 2025";
-  const regex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!regex.test(dateStr)) {
-    return dateStr;
+const excelDateToIsoString = (val: any): string => {
+  if (!val) return "";
+  const str = String(val).trim();
+  if (!str) return "";
+
+  // If it's an Excel serial date number
+  if (/^\d+(\.\d+)?$/.test(str)) {
+    const serial = parseFloat(str);
+    if (serial > 10000 && serial < 60000) {
+      try {
+        const msSinceEpoch = (serial - 25569) * 86400 * 1000;
+        const date = new Date(msSinceEpoch);
+        const yyyy = date.getUTCFullYear();
+        const mm = String(date.getUTCMonth() + 1).padStart(2, "0");
+        const dd = String(date.getUTCDate()).padStart(2, "0");
+        return `${yyyy}-${mm}-${dd}`;
+      } catch (e) {
+        // Fallback
+      }
+    }
   }
-  const parts = dateStr.split("-");
-  const year = parseInt(parts[0], 10);
-  const monthIdx = parseInt(parts[1], 10) - 1;
-  const day = parseInt(parts[2], 10);
-  
-  const months = [
-    "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-  ];
-  
-  if (monthIdx >= 0 && monthIdx < 12) {
-    return `${day} ${months[monthIdx]} ${year}`;
+
+  // If it is already standard YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    return str;
   }
-  return dateStr;
+
+  // If DD-MM-YYYY or DD/MM/YYYY
+  const slashRegex = /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/;
+  if (slashRegex.test(str)) {
+    const parts = str.match(slashRegex);
+    if (parts) {
+      const d = String(parts[1]).padStart(2, "0");
+      const m = String(parts[2]).padStart(2, "0");
+      const y = parts[3];
+      return `${y}-${m}-${d}`;
+    }
+  }
+
+  // Try standard JS parser
+  const ts = Date.parse(str);
+  if (!isNaN(ts)) {
+    try {
+      const date = new Date(ts);
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    } catch (e) {}
+  }
+
+  return str;
+};
+
+const formatIndonesianDate = (dateStr: string, fallbackDefault?: string): string => {
+  if (!dateStr) return fallbackDefault !== undefined ? fallbackDefault : "19 Desember 2025";
+  
+  const trimmed = dateStr.trim();
+  if (!trimmed) return fallbackDefault !== undefined ? fallbackDefault : "19 Desember 2025";
+
+  // Check if it's an Excel serial dates (only digits)
+  if (/^\d+(\.\d+)?$/.test(trimmed)) {
+    const serial = parseFloat(trimmed);
+    if (serial > 10000 && serial < 60000) {
+      try {
+        const msSinceEpoch = (serial - 25569) * 86400 * 1000;
+        const date = new Date(msSinceEpoch);
+        const day = date.getUTCDate();
+        const monthIdx = date.getUTCMonth();
+        const year = date.getUTCFullYear();
+        
+        const months = [
+          "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+          "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        
+        if (monthIdx >= 0 && monthIdx < 12) {
+          return `${day} ${months[monthIdx]} ${year}`;
+        }
+      } catch (e) {
+        // Fallback
+      }
+    }
+  }
+
+  // Check YYYY-MM-DD
+  const regex = /^(\d{4})-(\d{2})-(\d{2})$/;
+  if (regex.test(trimmed)) {
+    const parts = trimmed.split("-");
+    const year = parseInt(parts[0], 10);
+    const monthIdx = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+    
+    const months = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    
+    if (monthIdx >= 0 && monthIdx < 12) {
+      return `${day} ${months[monthIdx]} ${year}`;
+    }
+  }
+
+  // Check DD-MM-YYYY or DD/MM/YYYY of slashes
+  const slashRegex = /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/;
+  if (slashRegex.test(trimmed)) {
+    const parts = trimmed.match(slashRegex);
+    if (parts) {
+      const day = parseInt(parts[1], 10);
+      const monthIdx = parseInt(parts[2], 10) - 1;
+      const year = parseInt(parts[3], 10);
+      
+      const months = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+      ];
+      
+      if (monthIdx >= 0 && monthIdx < 12) {
+        return `${day} ${months[monthIdx]} ${year}`;
+      }
+    }
+  }
+
+  // Standard date parser
+  const parsedTimestamp = Date.parse(trimmed);
+  if (!isNaN(parsedTimestamp)) {
+    try {
+      const date = new Date(parsedTimestamp);
+      const day = date.getDate();
+      const monthIdx = date.getMonth();
+      const year = date.getFullYear();
+      
+      const months = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+      ];
+      
+      if (monthIdx >= 0 && monthIdx < 12) {
+        return `${day} ${months[monthIdx]} ${year}`;
+      }
+    } catch (e) {
+      // Ignore fallback
+    }
+  }
+
+  return trimmed;
 };
 
 export default function RaportPAUD() {
@@ -914,7 +1040,7 @@ export default function RaportPAUD() {
           namaIbu: String(row["Nama Ibu"] || ""),
           pekerjaanIbu: String(row["Pekerjaan Ibu"] || ""),
           noHp: String(row["No HP"] || ""),
-          tglLahir: String(row["Tgl Lahir (YYYY-MM-DD)"] || row["Tgl Lahir"] || ""),
+          tglLahir: excelDateToIsoString(row["Tgl Lahir (YYYY-MM-DD)"] || row["Tgl Lahir"] || ""),
           tempatLahir: String(row["Tempat Lahir"] || ""),
           jenisKelamin: String(row["Jenis Kelamin"] || "Laki-laki"),
           anakKe: Number(row["Anak Ke"]) || 1,
@@ -4562,9 +4688,6 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
 
                         <div className="z-10 space-y-6">
                           <div className="text-center space-y-2 pb-2 border-b border-slate-100">
-                            <span className="bg-red-500 text-white text-[9px] font-black uppercase px-3 py-1 rounded-full tracking-wider shadow-sm inline-block">
-                              PAUD MERDEKA
-                            </span>
                             <h2 className="text-md font-black text-slate-950 uppercase tracking-widest block font-display">
                               Keterangan Diri Anak Didik
                             </h2>
@@ -4591,7 +4714,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                   <td className="py-2 text-slate-600 font-bold">Tempat, Tanggal Lahir</td>
                                   <td className="py-2 text-slate-400 font-medium">:</td>
                                   <td className="py-2 text-slate-900 font-semibold uppercase">
-                                    {(printSiswa.tempatLahir || "-").toUpperCase()}, {(printSiswa.tglLahir || "-").toUpperCase()}
+                                    {(printSiswa.tempatLahir || "-").toUpperCase()}, {formatIndonesianDate(printSiswa.tglLahir, "-").toUpperCase()}
                                   </td>
                                 </tr>
                                 <tr>
@@ -4676,8 +4799,8 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </p>
                               </div>
                               <div className="w-full">
-                                <strong className="text-xs font-black text-slate-950 underline decoration-slate-900 underline-offset-4 block uppercase font-mono leading-none pb-1">
-                                  {state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd."}
+                                <strong className="text-xs font-black text-slate-950 underline decoration-slate-900 underline-offset-4 block font-mono leading-none pb-1">
+                                  {(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.").replace(/S\.PD\.?$/i, "S.Pd.")}
                                 </strong>
                               </div>
                             </div>
@@ -4908,8 +5031,8 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                     {/* Bottom Center: Kepala Sekolah */}
                                     <div className="col-span-2 flex flex-col items-center justify-between mt-4">
                                         <p className="mb-20">Mengetahui,<br />Kepala Sekolah</p>
-                                        <p className="font-bold underline decoration-slate-900 underline-offset-2 uppercase">
-                                            {state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd."}
+                                        <p className="font-bold underline decoration-slate-900 underline-offset-2">
+                                            {(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.").replace(/S\.PD\.?$/i, "S.Pd.")}
                                         </p>
                                     </div>
                                 </div>
