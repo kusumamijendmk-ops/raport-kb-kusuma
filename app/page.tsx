@@ -4713,8 +4713,8 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                   <td className="py-2 text-slate-450 font-bold">3.</td>
                                   <td className="py-2 text-slate-600 font-bold">Tempat, Tanggal Lahir</td>
                                   <td className="py-2 text-slate-400 font-medium">:</td>
-                                  <td className="py-2 text-slate-900 font-semibold uppercase">
-                                    {(printSiswa.tempatLahir || "-").toUpperCase()}, {formatIndonesianDate(printSiswa.tglLahir, "-").toUpperCase()}
+                                  <td className="py-2 text-slate-900 font-semibold">
+                                    {(printSiswa.tempatLahir || "-").toUpperCase()}, {formatIndonesianDate(printSiswa.tglLahir, "-")}
                                   </td>
                                 </tr>
                                 <tr>
@@ -4800,7 +4800,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                               </div>
                               <div className="w-full">
                                 <strong className="text-xs font-black text-slate-950 underline decoration-slate-900 underline-offset-4 block font-mono leading-none pb-1">
-                                  {(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.").replace(/S\.PD\.?$/i, "S.Pd.")}
+                                  {(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.").replace(/S\.PD\.?$/gi, "S.Pd.")}
                                 </strong>
                               </div>
                             </div>
@@ -4823,7 +4823,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                         const categoryDescription = catAssessment?.deskripsi || "";
 
                                         return (
-                                            <div key={kat.id} className="space-y-4">
+                                            <div key={kat.id} className="space-y-3">
                                                 <div className="border-l-4 border-indigo-600 pl-3 py-1 bg-slate-50 rounded-r-md keep-together">
                                                     <span className="text-xs font-black uppercase text-indigo-700 tracking-widest block leading-none mb-1">
                                                         I. Capaian Pembelajaran
@@ -4885,9 +4885,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                                     </table>
                                                 </div>
 
-                                                <div className="space-y-1.5 keep-together">
+                                                <div className="space-y-1 keep-together">
                                                     <span className="text-xs font-black uppercase text-indigo-700 tracking-wider ml-1">Deskripsi Munculan Narasi:</span>
-                                                    <div className="border border-slate-950 rounded-xl p-6 bg-slate-50/50 min-h-[140px] text-base font-semibold text-slate-900 leading-relaxed text-justify whitespace-pre-wrap shadow-inner narrative-box">
+                                                    <div className="border border-slate-950 rounded-xl p-5 bg-slate-50/50 min-h-[140px] text-base font-semibold text-slate-900 leading-relaxed text-justify whitespace-pre-wrap shadow-inner narrative-box">
                                                         {categoryDescription || `Ananda ${printSiswa.namaSiswa} telah menunjukkan penguasaan yang sangat baik pada bidang ${kat.namaKategori}. Ia mampu mengikuti instruksi dengan antusias and menunjukkan kemajuan yang membanggakan dalam setiap sub-pembelajaran.`}
                                                     </div>
                                                 </div>
@@ -4897,7 +4897,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION II: KOKURIKULER (P5 PANEL) */}
-                                <div className="space-y-4 pt-10 keep-together">
+                                <div className="space-y-3 pt-6 keep-together">
                                     <div className="border-l-4 border-indigo-650 pl-3 bg-slate-50 py-1.5 rounded-r">
                                         <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
                                             II. Capaian Kokurikuler (Projek Penguatan Profil Pelajar Pancasila - P5)
@@ -4938,7 +4938,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                                                         {sub.namaSubdimensi.replace(/^Dimensi\s+/i, "")}
                                                                     </td>
                                                                     <td className="px-3.5 py-3 border-r border-slate-950 leading-relaxed text-slate-800 font-medium text-justify text-[11px] whitespace-pre-wrap">
-                                                                        {deskripsiAss || `Ananda ${printSiswa.namaSiswa} menunjukkan performa keterlibatan yang positif dan berkembang konsisten dalam mewujudkan projek profil pancasila bertemakan sub-elemen ${sub.namaSubdimensi}.`}
+                                                                        {deskripsiAss || `Ananda ${printSiswa.namaSiswa} menunjukkan performa keterlibatan yang positif and berkembang konsisten dalam mewujudkan projek profil pancasila bertemakan sub-elemen ${sub.namaSubdimensi}.`}
                                                                     </td>
                                                                     <td className="px-3.5 py-3 text-center font-extrabold">
                                                                         <span className={`px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-wider ${badgeStyle} inline-block leading-none shadow-xs`}>
@@ -4961,7 +4961,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION III: CATATAN GURU WALI KELAS */}
-                                <div className="space-y-2 pt-10 keep-together">
+                                <div className="space-y-2 pt-6 keep-together">
                                     <div className="border-l-4 border-indigo-700 pl-3 bg-slate-50 py-1 rounded-r">
                                         <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
                                             III. Catatan Guru Wali Kelas
@@ -4973,7 +4973,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION IV: KEHADIRAN (REKAPITULASI ABSENSI SEMESTER) */}
-                                <div className="space-y-2.5 pt-10 keep-together">
+                                <div className="space-y-2.5 pt-6 keep-together">
                                     <div className="border-l-4 border-indigo-700 pl-3 bg-slate-50 py-1 rounded-r">
                                         <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
                                             IV. Kehadiran (Rekapitulasi Absensi Semester)
@@ -5007,44 +5007,37 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION V: SIGNATURE BLOCK */}
-                                <div className="pt-10 border-t border-slate-150 grid grid-cols-2 gap-y-16 text-center text-sm text-slate-900 leading-relaxed max-w-2xl mx-auto w-full keep-together mt-10">
+                                <div className="pt-8 border-t border-slate-150 grid grid-cols-2 gap-y-12 text-center text-sm text-slate-900 leading-relaxed max-w-2xl mx-auto w-full keep-together mt-8">
                                     {/* Top Left: Orang Tua */}
                                     <div className="flex flex-col items-center justify-between">
-                                        <p className="mb-20">Mengetahui,<br />Orang Tua/Wali,</p>
+                                        <p className="mb-16">Mengetahui,<br />Orang Tua/Wali,</p>
                                         <div className="border-b border-slate-900 w-3/4"></div>
                                     </div>
 
                                     {/* Top Right: Wali Kelas */}
                                     <div className="flex flex-col items-center justify-between">
-                                        <p className="mb-20">
+                                        <p className="mb-16">
                                             {printCity}, {formatIndonesianDate(state.dataSekolah.tglRaport)}<br />
                                             Wali Kelas,
                                         </p>
                                         <div>
-                                            <p className="font-bold underline decoration-slate-900 underline-offset-2 uppercase">
-                                                {printKelasItem?.waliKelas || "WALIKELAS PAUD"}
+                                            <p className="font-bold underline decoration-slate-900 underline-offset-2">
+                                                {(printKelasItem?.waliKelas || "WALIKELAS PAUD").replace(/S\.PD\.?$/gi, "S.Pd.")}
                                             </p>
                                             <p>NUPTK: {printKelasItem?.nuptkNgty || "6359752654300053"}</p>
                                         </div>
                                     </div>
 
                                     {/* Bottom Center: Kepala Sekolah */}
-                                    <div className="col-span-2 flex flex-col items-center justify-between mt-4">
-                                        <p className="mb-20">Mengetahui,<br />Kepala Sekolah</p>
+                                    <div className="col-span-2 flex flex-col items-center justify-between mt-2">
+                                        <p className="mb-16">Mengetahui,<br />Kepala Sekolah</p>
                                         <p className="font-bold underline decoration-slate-900 underline-offset-2">
-                                            {(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.").replace(/S\.PD\.?$/i, "S.Pd.")}
+                                            {(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.").replace(/S\.PD\.?$/gi, "S.Pd.")}
                                         </p>
                                     </div>
-                                </div>
+                                </div>                   </div>
 
                             </div>
-                        </div>
-
-                        {/* Page index footer */}
-                        <div className="text-[9px] text-slate-400 font-mono flex justify-between items-center pt-2 mt-12 border-t border-slate-100">
-                            <span>Laporan Hasil Capaian Perkembangan Anak Didik (Selesai)</span>
-                            <span>Halaman Laporan Akhir (Selesai)</span>
-                        </div>
                       </div>
 
                     </div>
