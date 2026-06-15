@@ -2047,7 +2047,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
         @media print {
           @page {
             size: A4 portrait;
-            margin: 2cm !important;
+            margin: 1.5cm !important;
           }
           body {
             font-family: Arial, sans-serif !important;
@@ -4618,9 +4618,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative overflow-hidden">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-[257mm] print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Frame with Double Border for Classic Cover Look */}
-                        <div className="absolute inset-4 border-2 border-slate-950 rounded-xl pointer-events-none p-1 print:inset-4">
+                        <div className="absolute inset-4 border-2 border-slate-950 rounded-xl pointer-events-none p-1 print:inset-0">
                           <div className="w-full h-full border border-slate-300 rounded-lg"></div>
                         </div>
 
@@ -4691,9 +4691,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                       {/* PAGE 2: BIODATA PAGE (KETERANGAN DIRI) */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative overflow-hidden">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-[257mm] print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Border */}
-                        <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-4"></div>
+                        <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-0"></div>
 
                         <div className="z-10 space-y-6">
                           <div className="text-center space-y-2 pb-2 border-b border-slate-100">
@@ -4818,7 +4818,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                            {/* INTRAKURIKULER SECTION: CONTINUOUS FLOW */}
-                      <div className="print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
                         <div className="absolute inset-4 border border-slate-150 rounded-xl pointer-events-none print:hidden"></div>
 
                         <div className="z-10 space-y-6">
@@ -4906,7 +4906,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION II: KOKURIKULER (P5 PANEL) */}
-                                <div className="space-y-3 pt-6">
+                                <div className="space-y-3 pt-6 keep-together">
                                     <div className="border-l-4 border-indigo-650 pl-3 bg-slate-50 py-1.5 rounded-r">
                                         <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
                                             II. Capaian Kokurikuler (Projek Penguatan Profil Pelajar Pancasila - P5)
@@ -4970,7 +4970,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                 </div>
 
                                 {/* SECTION III: CATATAN GURU WALI KELAS */}
-                                <div className="space-y-2 pt-6">
+                                <div className="space-y-2 pt-6 keep-together">
                                     <div className="border-l-4 border-indigo-700 pl-3 bg-slate-50 py-1 rounded-r">
                                         <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
                                             III. Catatan Guru Wali Kelas
@@ -4981,13 +4981,15 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                     </div>
                                 </div>
 
-                                {/* SECTION IV: KEHADIRAN (REKAPITULASI ABSENSI SEMESTER) */}
-                                <div className="space-y-2.5 pt-6">
-                                    <div className="border-l-4 border-indigo-700 pl-3 bg-slate-50 py-1 rounded-r">
-                                        <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
-                                            IV. Kehadiran (Rekapitulasi Absensi Semester)
-                                        </h3>
-                                    </div>
+                                {/* GROUP SECTION IV & V */}
+                                <div className="keep-together pt-6">
+                                  {/* SECTION IV: KEHADIRAN (REKAPITULASI ABSENSI SEMESTER) */}
+                                  <div className="space-y-2.5">
+                                      <div className="border-l-4 border-indigo-700 pl-3 bg-slate-50 py-1 rounded-r">
+                                          <h3 className="text-sm font-black uppercase text-slate-950 tracking-wider font-display">
+                                              IV. Kehadiran (Rekapitulasi Absensi Semester)
+                                          </h3>
+                                      </div>
                                     
                                     <div className="max-w-md overflow-hidden border border-slate-950 rounded-lg shadow-sm bg-white">
                                         <table className="w-full text-left text-sm border-collapse bg-white">
@@ -5013,11 +5015,11 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
+                                  </div>
 
-                                {/* SECTION V: SIGNATURE BLOCK */}
-                                <div className="pt-6 border-t border-slate-150 grid grid-cols-2 gap-y-8 text-center text-sm text-slate-900 leading-relaxed max-w-2xl mx-auto w-full keep-together mt-6">
-                                    {/* Top Left: Orang Tua */}
+                                  {/* SECTION V: SIGNATURE BLOCK */}
+                                  <div className="pt-6 border-t border-slate-150 grid grid-cols-2 gap-y-8 text-center text-sm text-slate-900 leading-relaxed max-w-2xl mx-auto w-full mt-6">
+                                      {/* Top Left: Orang Tua */}
                                     <div className="flex flex-col items-center justify-between">
                                         <p className="mb-14">Mengetahui,<br />Orang Tua/Wali,</p>
                                         <div className="border-b border-slate-900 w-3/4"></div>
@@ -5039,11 +5041,12 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
 
                                     {/* Bottom Center: Kepala Sekolah */}
                                     <div className="col-span-2 flex flex-col items-center justify-between mt-2">
-                                        <p className="mb-14">Mengetahui,<br />Kepala Sekolah</p>
-                                        <p className="font-bold underline decoration-slate-900 underline-offset-2">
-                                            {cleanName(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.")}
-                                        </p>
-                                    </div>
+                                          <p className="mb-14">Mengetahui,<br />Kepala Sekolah</p>
+                                          <p className="font-bold underline decoration-slate-900 underline-offset-2">
+                                              {cleanName(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.")}
+                                          </p>
+                                      </div>
+                                  </div>
                                 </div>
                             </div>
                         </div>
