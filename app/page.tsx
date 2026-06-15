@@ -81,10 +81,17 @@ const excelDateToIsoString = (val: any): string => {
 const formatIndonesianDate = (dateStr: string, fallbackDefault?: string): string => {
   if (!dateStr) return fallbackDefault !== undefined ? fallbackDefault : "19 Desember 2025";
   
-  const trimmed = dateStr.trim();
+  // Extract just the date part if it is a full ISO timestamp
+  const trimmed = dateStr.trim().split("T")[0].replace(/\//g, "-");
   if (!trimmed) return fallbackDefault !== undefined ? fallbackDefault : "19 Desember 2025";
 
-  // Check if it's an Excel serial dates (only digits)
+  // Months name array
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  // Check if it's an Excel serial date number
   if (/^\d+(\.\d+)?$/.test(trimmed)) {
     const serial = parseFloat(trimmed);
     if (serial > 10000 && serial < 60000) {
@@ -95,77 +102,49 @@ const formatIndonesianDate = (dateStr: string, fallbackDefault?: string): string
         const monthIdx = date.getUTCMonth();
         const year = date.getUTCFullYear();
         
-        const months = [
-          "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-          "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-        ];
-        
         if (monthIdx >= 0 && monthIdx < 12) {
           return `${day} ${months[monthIdx]} ${year}`;
         }
-      } catch (e) {
-        // Fallback
-      }
+      } catch (e) {}
     }
   }
 
-  // Check YYYY-MM-DD
-  const regex = /^(\d{4})-(\d{2})-(\d{2})$/;
-  if (regex.test(trimmed)) {
+  // Check YYYY-MM-DD (Standard)
+  const ymdRegex = /^(\d{4})-(\d{2})-(\d{2})$/;
+  if (ymdRegex.test(trimmed)) {
     const parts = trimmed.split("-");
     const year = parseInt(parts[0], 10);
     const monthIdx = parseInt(parts[1], 10) - 1;
     const day = parseInt(parts[2], 10);
-    
-    const months = [
-      "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
     
     if (monthIdx >= 0 && monthIdx < 12) {
       return `${day} ${months[monthIdx]} ${year}`;
     }
   }
 
-  // Check DD-MM-YYYY or DD/MM/YYYY of slashes
-  const slashRegex = /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/;
-  if (slashRegex.test(trimmed)) {
-    const parts = trimmed.match(slashRegex);
-    if (parts) {
-      const day = parseInt(parts[1], 10);
-      const monthIdx = parseInt(parts[2], 10) - 1;
-      const year = parseInt(parts[3], 10);
-      
-      const months = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-      ];
-      
-      if (monthIdx >= 0 && monthIdx < 12) {
-        return `${day} ${months[monthIdx]} ${year}`;
-      }
+  // Check DD-MM-YYYY
+  const dmyRegex = /^(\d{1,2})-(\d{1,2})-(\d{4})$/;
+  if (dmyRegex.test(trimmed)) {
+    const parts = trimmed.split("-");
+    const day = parseInt(parts[0], 10);
+    const monthIdx = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+    
+    if (monthIdx >= 0 && monthIdx < 12) {
+      return `${day} ${months[monthIdx]} ${year}`;
     }
   }
 
-  // Standard date parser
+  // Standard date parser fallback
   const parsedTimestamp = Date.parse(trimmed);
   if (!isNaN(parsedTimestamp)) {
-    try {
-      const date = new Date(parsedTimestamp);
-      const day = date.getDate();
-      const monthIdx = date.getMonth();
-      const year = date.getFullYear();
-      
-      const months = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-      ];
-      
-      if (monthIdx >= 0 && monthIdx < 12) {
-        return `${day} ${months[monthIdx]} ${year}`;
-      }
-    } catch (e) {
-      // Ignore fallback
+    const date = new Date(parsedTimestamp);
+    const day = date.getDate();
+    const monthIdx = date.getMonth();
+    const year = date.getFullYear();
+    
+    if (monthIdx >= 0 && monthIdx < 12) {
+      return `${day} ${months[monthIdx]} ${year}`;
     }
   }
 
@@ -5035,9 +5014,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                             {(state.dataSekolah.kepalaSekolah || "MIRAH TITIMIRANTI, S.P., S.Pd.").replace(/S\.PD\.?$/gi, "S.Pd.")}
                                         </p>
                                     </div>
-                                </div>                   </div>
-
+                                </div>
                             </div>
+                        </div>
                       </div>
 
                     </div>
