@@ -11,11 +11,20 @@
   }
 
   /* Dynamic styles for printing standard report forms */
+  @page {
+    size: A4 portrait;
+    margin: 0px !important;
+  }
+
   @media print {
     body {
       background: white !important;
       color: black !important;
       font-size: 11pt !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     
     .no-print {
