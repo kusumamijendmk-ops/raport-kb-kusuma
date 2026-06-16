@@ -4618,69 +4618,70 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className="hidden print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-8 print:m-0 animate-fade-in font-sans relative">
-                        {/* Outer Frame */}
-                        <div className="absolute inset-4 border-[6px] border-slate-950 rounded-2xl pointer-events-none print:inset-0"></div>
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-start items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-12 print:m-0 animate-fade-in font-sans relative">
+                        {/* Outer Frame - Elegant thin border */}
+                        <div className="absolute inset-4 border border-slate-950 rounded-2xl pointer-events-none print:inset-4"></div>
 
-                        {/* Top Header Logo Representation */}
-                        <div className="z-10 mt-8 space-y-4 flex flex-col items-center">
-                          <div className={`${state.dataSekolah.logo ? 'w-48 h-32' : 'w-32 h-32 rounded-full border border-slate-200'} relative flex items-center justify-center bg-white`}>
-                            {state.dataSekolah.logo ? (
-                              <img src={state.dataSekolah.logo} alt="Logo" className="max-w-full max-h-full object-contain" />
-                            ) : (
-                              <svg viewBox="0 0 100 100" className="w-full h-full">
-                                <circle cx="50" cy="50" r="46" fill="none" stroke="#0ea5e9" strokeWidth="2.5" />
-                                <circle cx="50" cy="50" r="38" fill="none" stroke="#38bdf8" strokeWidth="1" strokeDasharray="2 2" />
-                                <circle cx="50" cy="54" r="26" fill="#facc15" stroke="#27272a" strokeWidth="1.5" />
-                                <circle cx="43" cy="48" r="3" fill="#27272a" />
-                                <circle cx="57" cy="48" r="3" fill="#27272a" />
-                                <path d="M 40 60 Q 50 72 60 60" fill="none" stroke="#27272a" strokeWidth="2.5" strokeLinecap="round" />
-                                <path d="M 22 28 C 30 14, 70 14, 78 28" fill="none" stroke="#0284c7" strokeWidth="3" strokeLinecap="round" />
-                              </svg>
-                            )}
+                        {/* Top Header Logo */}
+                        <div className="z-10 mt-12 mb-8 flex flex-col items-center">
+                          <div className="w-44 h-44 flex items-center justify-center">
+                             {state.dataSekolah.logo ? (
+                               <img src={state.dataSekolah.logo} alt="Logo" className="max-w-full max-h-full object-contain" />
+                             ) : (
+                               <div className="w-32 h-32 rounded-full border-2 border-slate-200 flex items-center justify-center text-slate-400 font-bold">LOGO</div>
+                             )}
                           </div>
+                          <p className="text-[10px] font-black text-slate-800 tracking-wider mt-1">MEDIA MANDIRI ANAK BERPRESTASI</p>
                         </div>
 
                         {/* Main Title Block */}
-                        <div className="z-10 space-y-4 mt-6">
-                          <h1 className="text-[28px] font-black text-slate-800 uppercase tracking-wider leading-none font-display">
+                        <div className="z-10 space-y-2 mb-10">
+                          <h1 className="text-[26px] font-black text-slate-900 uppercase tracking-wider font-display">
                             LAPORAN HASIL
                           </h1>
-                          <h2 className="text-[17px] font-bold text-slate-700 uppercase tracking-wide mx-auto leading-[1.6]">
-                            CAPAIAN PERKEMBANGAN PESERTA DIDIK<br/>PENDIDIKAN ANAK USIA DINI (PAUD)
-                          </h2>
+                          <div className="space-y-1">
+                            <h2 className="text-[16px] font-bold text-slate-800 uppercase tracking-wide px-4">
+                              CAPAIAN PERKEMBANGAN PESERTA DIDIK
+                            </h2>
+                            <h2 className="text-[16px] font-bold text-slate-800 uppercase tracking-wide px-4">
+                              PENDIDIKAN ANAK USIA DINI (PAUD)
+                            </h2>
+                          </div>
                         </div>
 
-                        {/* Named Student Card */}
-                        <div className="z-10 w-full max-w-md space-y-6 flex-grow flex flex-col justify-center">
-                          <div className="space-y-3">
-                            <span className="text-[13px] font-bold text-slate-400 tracking-wider uppercase block">NAMA PESERTA DIDIK</span>
-                            <div className="border border-slate-800 rounded-[14px] py-4 px-6 bg-white mx-8">
-                              <h3 className="text-[22px] font-bold text-slate-950 tracking-wide uppercase leading-tight font-display">
+                        {/* Named Student Section */}
+                        <div className="z-10 w-full max-w-lg mt-auto mb-auto space-y-8 flex flex-col items-center">
+                          <div className="w-full flex flex-col items-center">
+                            <span className="text-[11px] font-bold text-slate-500 tracking-[0.15em] uppercase block mb-3">NAMA PESERTA DIDIK</span>
+                            <div className="w-[85%] border border-slate-950 rounded-[14px] py-4 px-6 bg-white shadow-sm">
+                              <h3 className="text-[22px] font-black text-slate-950 tracking-wider uppercase leading-tight font-display">
                                 {printSiswa.namaSiswa}
                               </h3>
                             </div>
                           </div>
 
-                          <div className="space-y-1.5 mt-8">
-                            <span className="text-[13px] font-bold text-slate-400 tracking-wider uppercase block">NISN</span>
-                            <div className="text-[22px] font-bold text-slate-900 tracking-wider">
+                          <div className="flex flex-col items-center">
+                            <span className="text-[11px] font-bold text-slate-500 tracking-[0.15em] uppercase block mb-2">NISN</span>
+                            <div className="text-[22px] font-black text-slate-900 tracking-[0.1em]">
                               {printSiswa.nisn || "----------"}
                             </div>
                           </div>
                         </div>
 
                         {/* Bottom Metadata Block */}
-                        <div className="z-10 mt-auto w-[80%] pt-8 pb-12 text-center space-y-1 border-t border-slate-300">
-                          <h4 className="text-[20px] font-bold text-slate-950 uppercase tracking-widest font-display">
-                            {state.dataSekolah.namaSekolah || "KB KUSUMA"}
-                          </h4>
-                          {state.dataSekolah.npsn && (
-                            <p className="text-[18px] font-bold text-slate-950 tracking-wide">NPSN: {state.dataSekolah.npsn}</p>
-                          )}
-                          <p className="text-[13px] text-slate-600 font-semibold leading-[1.6] uppercase max-w-[400px] mx-auto whitespace-pre-wrap mt-2">
-                            {state.dataSekolah.alamat || "Alamat Lembaga Utama belum didokumentasikan."}
-                          </p>
+                        <div className="z-10 mt-auto w-[85%] flex flex-col items-center">
+                          <div className="w-full border-t border-slate-300 mb-6 opacity-60"></div>
+                          <div className="space-y-1 text-center pb-8">
+                            <h4 className="text-[20px] font-black text-slate-950 uppercase tracking-widest font-display">
+                              {state.dataSekolah.namaSekolah || "KB KUSUMA"}
+                            </h4>
+                            {state.dataSekolah.npsn && (
+                              <p className="text-[18px] font-bold text-slate-900 tracking-wide">NPSN: {state.dataSekolah.npsn}</p>
+                            )}
+                            <p className="text-[12px] text-slate-700 font-bold leading-relaxed uppercase max-w-[420px] mx-auto whitespace-pre-wrap mt-2">
+                              {state.dataSekolah.alamat || "Alamat Lembaga Utama belum didokumentasikan."}
+                            </p>
+                          </div>
                         </div>
                       </div>
 
