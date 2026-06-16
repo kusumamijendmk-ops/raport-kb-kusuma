@@ -313,6 +313,7 @@ export default function RaportPAUD() {
   // Print selector
   const [printSiswaId, setPrintSiswaId] = useState<string>("");
   const [printKelasId, setPrintKelasId] = useState<string>("");
+  const [printOnlyCover, setPrintOnlyCover] = useState(false);
 
   // Custom Modals & Toasts for Admin User Management to bypass iframe prompt/alert/confirm blocking
   const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
@@ -4537,9 +4538,26 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                 </div>
 
                 {printSiswaId ? (
-                  <div className="flex gap-2 justify-end pt-2 border-t border-slate-100">
+                  <div className="flex gap-2 justify-end pt-2 border-t border-slate-100 flex-wrap">
                     <button
-                      onClick={() => window.print()}
+                      onClick={() => {
+                        setPrintOnlyCover(true);
+                        setTimeout(() => {
+                          window.print();
+                          setPrintOnlyCover(false);
+                        }, 100);
+                      }}
+                      className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow"
+                    >
+                      <Printer className="w-4 h-4" /> Cetak Cover Raport
+                    </button>
+                    <button
+                      onClick={() => {
+                        setPrintOnlyCover(false);
+                        setTimeout(() => {
+                          window.print();
+                        }, 100);
+                      }}
                       className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow"
                     >
                       <Printer className="w-4 h-4" /> Cetak Raport Anak (Printer / PDF)
@@ -4618,12 +4636,12 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-8 print:m-0 animate-fade-in font-sans relative">
+                      <div className={`${!printOnlyCover ? 'hidden' : 'block'} print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-8 print:m-0 animate-fade-in font-sans relative`}>
                         {/* Outer Frame */}
-                        <div className="absolute inset-4 border-[8px] border-slate-950 rounded-2xl pointer-events-none print:inset-0"></div>
+                        <div className="absolute inset-4 border-[6px] border-slate-950 rounded-2xl pointer-events-none print:inset-0"></div>
 
                         {/* Top Header Logo Representation */}
-                        <div className="z-10 mt-[20px] flex flex-col items-center">
+                        <div className="z-10 mt-8 space-y-4 flex flex-col items-center">
                           <div className={`${state.dataSekolah.logo ? 'w-48 h-32' : 'w-32 h-32 rounded-full border border-slate-200'} relative flex items-center justify-center bg-white`}>
                             {state.dataSekolah.logo ? (
                               <img src={state.dataSekolah.logo} alt="Logo" className="max-w-full max-h-full object-contain" />
@@ -4639,40 +4657,39 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                               </svg>
                             )}
                           </div>
-                          <p className="text-[10px] font-black tracking-widest mt-2 uppercase text-slate-800">Media Mandiri Anak Berprestasi</p>
                         </div>
 
                         {/* Main Title Block */}
-                        <div className="z-10 mt-[10px] text-center">
-                          <h1 className="text-[28px] font-black text-slate-800 uppercase tracking-widest leading-none font-display mb-1">
+                        <div className="z-10 space-y-4 mt-6">
+                          <h1 className="text-[28px] font-black text-slate-800 uppercase tracking-wider leading-none font-display">
                             LAPORAN HASIL
                           </h1>
                           <h2 className="text-[17px] font-bold text-slate-700 uppercase tracking-wide mx-auto leading-[1.6]">
-                            CAPAIAN PERKEMBANGAN PESERTA DIDIK<br/>TAMAN PENITIPAN ANAK (TPA)
+                            CAPAIAN PERKEMBANGAN PESERTA DIDIK<br/>PENDIDIKAN ANAK USIA DINI (PAUD)
                           </h2>
                         </div>
 
                         {/* Named Student Card */}
-                        <div className="z-10 w-full max-w-md mt-[10px] flex flex-col items-center">
-                          <div className="space-y-2">
+                        <div className="z-10 w-full max-w-md space-y-6 flex-grow flex flex-col justify-center">
+                          <div className="space-y-3">
                             <span className="text-[13px] font-bold text-slate-400 tracking-wider uppercase block">NAMA PESERTA DIDIK</span>
-                            <div className="border border-slate-800 rounded-[14px] py-4 px-10 bg-white">
+                            <div className="border border-slate-800 rounded-[14px] py-4 px-6 bg-white mx-8">
                               <h3 className="text-[22px] font-bold text-slate-950 tracking-wide uppercase leading-tight font-display">
                                 {printSiswa.namaSiswa}
                               </h3>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="z-10 mt-[10px] text-center">
-                          <span className="text-[13px] font-bold text-slate-400 tracking-wider uppercase block mb-1">NISN</span>
-                          <div className="text-[22px] font-bold text-slate-900 tracking-wider">
-                            {printSiswa.nisn || "----------"}
+                          <div className="space-y-1.5 mt-8">
+                            <span className="text-[13px] font-bold text-slate-400 tracking-wider uppercase block">NISN</span>
+                            <div className="text-[22px] font-bold text-slate-900 tracking-wider">
+                              {printSiswa.nisn || "----------"}
+                            </div>
                           </div>
                         </div>
 
                         {/* Bottom Metadata Block */}
-                        <div className="z-10 mt-[10px] w-full max-w-lg border-t border-slate-300 pt-6 pb-12 flex flex-col items-center">
+                        <div className="z-10 mt-auto w-[80%] pt-8 pb-12 text-center space-y-1 border-t border-slate-300">
                           <h4 className="text-[20px] font-bold text-slate-950 uppercase tracking-widest font-display">
                             {state.dataSekolah.namaSekolah || "KB KUSUMA"}
                           </h4>
@@ -4686,7 +4703,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                       {/* PAGE 2: BIODATA PAGE (KETERANGAN DIRI) */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-[257mm] print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
+                      <div className={`${printOnlyCover ? 'hidden' : 'flex'} print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex-col justify-between min-h-[960px] print:min-h-[257mm] print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative`}>
                         {/* Outer Border */}
                         <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-0"></div>
 
@@ -4813,7 +4830,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                            {/* INTRAKURIKULER SECTION: CONTINUOUS FLOW */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
+                      <div className={`${printOnlyCover ? 'hidden' : 'block'} print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large`}>
                         <div className="absolute inset-4 border border-slate-150 rounded-xl pointer-events-none print:hidden"></div>
 
                         <div className="z-10 space-y-6">
