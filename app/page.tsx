@@ -4723,7 +4723,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       {/* PAGE 2: BIODATA PAGE (KETERANGAN DIRI) */}
                       <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-0 print:h-[273mm] print:w-full print:border-none print:shadow-none print:p-6 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Border */}
-                        <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-4 print:border-slate-800 print:border-[3px] print:rounded-2xl"></div>
+                        <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:hidden"></div>
 
                         <div className="z-10 space-y-6">
                           <div className="text-center space-y-2 pb-2 border-b border-slate-100">
