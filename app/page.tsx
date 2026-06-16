@@ -4618,12 +4618,12 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-8 print:m-0 animate-fade-in font-sans relative">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-start items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-8 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Frame */}
                         <div className="absolute inset-4 border-[6px] border-slate-950 rounded-2xl pointer-events-none print:inset-0"></div>
 
                         {/* Top Header Logo Representation */}
-                        <div className="z-10 mt-8 space-y-4 flex flex-col items-center">
+                        <div className="z-10 mt-[20px] mb-[10px] flex flex-col items-center">
                           <div className={`${state.dataSekolah.logo ? 'w-48 h-32' : 'w-32 h-32 rounded-full border border-slate-200'} relative flex items-center justify-center bg-white`}>
                             {state.dataSekolah.logo ? (
                               <img src={state.dataSekolah.logo} alt="Logo" className="max-w-full max-h-full object-contain" />
@@ -4642,7 +4642,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                         </div>
 
                         {/* Main Title Block */}
-                        <div className="z-10 space-y-4 mt-6">
+                        <div className="z-10 mt-[10px] mb-[10px] text-center">
                           <h1 className="text-[28px] font-black text-slate-800 uppercase tracking-wider leading-none font-display">
                             LAPORAN HASIL
                           </h1>
@@ -4652,26 +4652,26 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                         </div>
 
                         {/* Named Student Card */}
-                        <div className="z-10 w-full max-w-md space-y-6 flex-grow flex flex-col justify-center">
+                        <div className="z-10 w-full max-w-md mt-[10px] mb-[10px] flex flex-col justify-center items-center">
                           <div className="space-y-3">
                             <span className="text-[13px] font-bold text-slate-400 tracking-wider uppercase block">NAMA PESERTA DIDIK</span>
-                            <div className="border border-slate-800 rounded-[14px] py-4 px-6 bg-white mx-8">
+                            <div className="border border-slate-800 rounded-[14px] py-4 px-6 bg-white">
                               <h3 className="text-[22px] font-bold text-slate-950 tracking-wide uppercase leading-tight font-display">
                                 {printSiswa.namaSiswa}
                               </h3>
                             </div>
                           </div>
+                        </div>
 
-                          <div className="space-y-1.5 mt-8">
-                            <span className="text-[13px] font-bold text-slate-400 tracking-wider uppercase block">NISN</span>
-                            <div className="text-[22px] font-bold text-slate-900 tracking-wider">
-                              {printSiswa.nisn || "----------"}
-                            </div>
+                        <div className="z-10 mt-[10px] mb-[10px]">
+                          <span className="text-[13px] font-bold text-slate-400 tracking-wider uppercase block">NISN</span>
+                          <div className="text-[22px] font-bold text-slate-900 tracking-wider">
+                            {printSiswa.nisn || "----------"}
                           </div>
                         </div>
 
                         {/* Bottom Metadata Block */}
-                        <div className="z-10 mt-auto w-[80%] pt-8 pb-12 text-center space-y-1 border-t border-slate-300">
+                        <div className="z-10 mt-[10px] mb-[40px] w-[80%] pt-8 pb-12 text-center space-y-1 border-t border-slate-300">
                           <h4 className="text-[20px] font-bold text-slate-950 uppercase tracking-widest font-display">
                             {state.dataSekolah.namaSekolah || "KB KUSUMA"}
                           </h4>
