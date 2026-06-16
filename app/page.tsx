@@ -4647,7 +4647,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                             LAPORAN HASIL
                           </h1>
                           <h2 className="text-[17px] font-bold text-slate-700 uppercase tracking-wide mx-auto leading-[1.6]">
-                            CAPAIAN PERKEMBANGAN PESERTA DIDIK<br/>PENDIDIKAN ANAK USIA DINI (PAUD)
+                            CAPAIAN PERKEMBANGAN PESERTA DIDIK<br/>TAMAN PENITIPAN ANAK (TPA)
                           </h2>
                         </div>
 
