@@ -313,7 +313,6 @@ export default function RaportPAUD() {
   // Print selector
   const [printSiswaId, setPrintSiswaId] = useState<string>("");
   const [printKelasId, setPrintKelasId] = useState<string>("");
-  const [printOnlyCover, setPrintOnlyCover] = useState(false);
 
   // Custom Modals & Toasts for Admin User Management to bypass iframe prompt/alert/confirm blocking
   const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
@@ -4538,26 +4537,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                 </div>
 
                 {printSiswaId ? (
-                  <div className="flex gap-2 justify-end pt-2 border-t border-slate-100 flex-wrap">
+                  <div className="flex gap-2 justify-end pt-2 border-t border-slate-100">
                     <button
-                      onClick={() => {
-                        setPrintOnlyCover(true);
-                        setTimeout(() => {
-                          window.print();
-                          setPrintOnlyCover(false);
-                        }, 100);
-                      }}
-                      className="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow"
-                    >
-                      <Printer className="w-4 h-4" /> Cetak Cover Raport
-                    </button>
-                    <button
-                      onClick={() => {
-                        setPrintOnlyCover(false);
-                        setTimeout(() => {
-                          window.print();
-                        }, 100);
-                      }}
+                      onClick={() => window.print()}
                       className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow"
                     >
                       <Printer className="w-4 h-4" /> Cetak Raport Anak (Printer / PDF)
@@ -4636,7 +4618,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className={`${!printOnlyCover ? 'hidden' : 'block'} print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-8 print:m-0 animate-fade-in font-sans relative`}>
+                      <div className="hidden print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-8 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Frame */}
                         <div className="absolute inset-4 border-[6px] border-slate-950 rounded-2xl pointer-events-none print:inset-0"></div>
 
@@ -4703,7 +4685,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                       {/* PAGE 2: BIODATA PAGE (KETERANGAN DIRI) */}
-                      <div className={`${printOnlyCover ? 'hidden' : 'flex'} print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex-col justify-between min-h-[960px] print:min-h-[257mm] print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative`}>
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-[257mm] print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Border */}
                         <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-0"></div>
 
@@ -4830,7 +4812,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                            {/* INTRAKURIKULER SECTION: CONTINUOUS FLOW */}
-                      <div className={`${printOnlyCover ? 'hidden' : 'block'} print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large`}>
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
                         <div className="absolute inset-4 border border-slate-150 rounded-xl pointer-events-none print:hidden"></div>
 
                         <div className="z-10 space-y-6">
