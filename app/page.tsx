@@ -163,6 +163,13 @@ const formatIndonesianDate = (dateStr: string, fallbackDefault?: string): string
   return trimmed;
 };
 
+const cleanHtmlText = (htmlString: string) => {
+  if (!htmlString) return "";
+  return htmlString
+    .replace(/&nbsp;/g, " ")
+    .replace(/\u00a0/g, " ");
+};
+
 export default function RaportPAUD() {
   const [mounted, setMounted] = useState(false);
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
@@ -2050,7 +2057,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
         @media print {
           @page {
             size: A4 portrait;
-            margin: 1.5cm !important;
+            margin: 12mm !important;
           }
           body {
             font-family: Arial, sans-serif !important;
@@ -2063,7 +2070,6 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
             width: 100% !important;
             max-width: none !important;
             margin: 0 auto !important;
-            padding: 0 !important;
             display: block !important;
             border: none !important;
             box-shadow: none !important;
@@ -4650,9 +4656,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className="print-page-break bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col items-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
+                      <div className="print-page-break bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col items-center min-h-[960px] print:min-h-0 print:h-[273mm] print:w-full print:border-none print:shadow-none print:p-6 print:m-0 animate-fade-in font-sans relative text-center">
                         {/* Outer Frame - Elegant thin border */}
-                        <div className="absolute inset-4 border border-slate-400 rounded-2xl pointer-events-none p-1 print:inset-0 print:border-slate-800 print:border-[3px] print:rounded-xl"></div>
+                        <div className="absolute inset-4 border border-slate-400 rounded-2xl pointer-events-none p-1 print:inset-4 print:border-slate-800 print:border-[3px] print:rounded-2xl"></div>
 
                         {/* Top Header Logo */}
                         <div className="z-10 mt-16 mb-8 flex flex-col items-center">
@@ -4715,9 +4721,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                       {/* PAGE 2: BIODATA PAGE (KETERANGAN DIRI) */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-[257mm] print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between min-h-[960px] print:min-h-0 print:h-[273mm] print:w-full print:border-none print:shadow-none print:p-6 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Border */}
-                        <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-0"></div>
+                        <div className="absolute inset-4 border border-slate-200 rounded-xl pointer-events-none p-1 print:inset-4 print:border-slate-800 print:border-[3px] print:rounded-2xl"></div>
 
                         <div className="z-10 space-y-6">
                           <div className="text-center space-y-2 pb-2 border-b border-slate-100">
@@ -4842,7 +4848,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       </div>
 
                            {/* INTRAKURIKULER SECTION: CONTINUOUS FLOW */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
+                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-8 max-w-3xl mx-auto block min-h-[960px] print:min-h-0 print:h-auto print:w-full print:border-none print:shadow-none print:px-8 print:py-6 print:m-0 animate-fade-in relative text-slate-950 print-arial-large">
                         <div className="absolute inset-4 border border-slate-150 rounded-xl pointer-events-none print:hidden"></div>
 
                         <div className="z-10 space-y-6">
@@ -4922,7 +4928,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                                     <span className="text-xs font-black uppercase text-indigo-700 tracking-wider ml-1">Deskripsi Munculan Narasi:</span>
                                                     <div 
                                                       className="border border-slate-950 rounded-xl p-5 bg-slate-50/50 min-h-[140px] text-base font-semibold text-slate-900 leading-relaxed text-justify shadow-inner narrative-box rich-text-print"
-                                                      dangerouslySetInnerHTML={{ __html: categoryDescription || `Ananda ${printSiswa.namaSiswa} telah menunjukkan penguasaan yang sangat baik pada bidang ${kat.namaKategori}. Ia mampu mengikuti instruksi dengan antusias and menunjukkan kemajuan yang membanggakan dalam setiap sub-pembelajaran.` }}
+                                                      dangerouslySetInnerHTML={{ __html: cleanHtmlText(categoryDescription) || `Ananda ${printSiswa.namaSiswa} telah menunjukkan penguasaan yang sangat baik pada bidang ${kat.namaKategori}. Ia mampu mengikuti instruksi dengan antusias and menunjukkan kemajuan yang membanggakan dalam setiap sub-pembelajaran.` }}
                                                     />
                                                 </div>
                                             </div>
@@ -4973,7 +4979,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                                                     </td>
                                                                     <td 
                                                                       className="px-3.5 py-3 border-r border-slate-950 leading-relaxed text-slate-800 font-medium text-justify text-[11px] rich-text-print"
-                                                                      dangerouslySetInnerHTML={{ __html: deskripsiAss || `Ananda ${printSiswa.namaSiswa} menunjukkan performa keterlibatan yang positif and berkembang konsisten dalam mewujudkan projek profil pancasila bertemakan sub-elemen ${sub.namaSubdimensi}.` }}
+                                                                      dangerouslySetInnerHTML={{ __html: cleanHtmlText(deskripsiAss) || `Ananda ${printSiswa.namaSiswa} menunjukkan performa keterlibatan yang positif and berkembang konsisten dalam mewujudkan projek profil pancasila bertemakan sub-elemen ${sub.namaSubdimensi}.` }}
                                                                     />
                                                                     <td className="px-3.5 py-3 text-center font-extrabold">
                                                                         <span className={`px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-wider ${badgeStyle} inline-block leading-none shadow-xs`}>
@@ -5004,7 +5010,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                     </div>
                                     <div 
                                         className="border border-slate-950 rounded-xl p-5 bg-slate-50/50 min-h-[110px] text-base font-semibold text-slate-900 leading-relaxed text-justify shadow-inner narrative-box rich-text-print"
-                                        dangerouslySetInnerHTML={{ __html: printCatatanSiswa }}
+                                        dangerouslySetInnerHTML={{ __html: cleanHtmlText(printCatatanSiswa) }}
                                     />
                                 </div>
 
