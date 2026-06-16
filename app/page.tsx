@@ -4631,11 +4631,10 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                                <div className="w-32 h-32 rounded-full border-2 border-slate-200 flex items-center justify-center text-slate-400 font-bold">LOGO</div>
                              )}
                           </div>
-                          <p className="text-[10px] font-black text-slate-800 tracking-wider mt-1">MEDIA MANDIRI ANAK BERPRESTASI</p>
                         </div>
 
                         {/* Main Title Block */}
-                        <div className="z-10 space-y-2 mb-10">
+                        <div className="z-10 space-y-3 text-center my-10">
                           <h1 className="text-[26px] font-black text-slate-900 uppercase tracking-wider font-display">
                             LAPORAN HASIL
                           </h1>
