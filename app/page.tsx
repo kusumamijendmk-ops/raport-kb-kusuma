@@ -4618,9 +4618,9 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                     <div className="space-y-12 no-print-gap print:space-y-0 text-slate-950 font-arial">
                       
                       {/* PAGE 1: COVER PAGE */}
-                      <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-start items-center text-center min-h-[900px] print:min-h-0 print:h-[200mm] print:w-full print:border-none print:shadow-none print:p-8 print:m-0 animate-fade-in font-sans relative overflow-hidden">
+                      <div className="print-page-break bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col items-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-0 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Frame - Elegant thin border */}
-                        <div className="absolute inset-4 border-[3px] border-slate-900 rounded-2xl pointer-events-none print:inset-6"></div>
+                        <div className="absolute inset-4 border border-slate-400 rounded-2xl pointer-events-none p-1 print:inset-0 print:border-slate-800 print:border-[3px] print:rounded-xl"></div>
 
                         {/* Top Header Logo */}
                         <div className="z-10 mt-16 mb-8 flex flex-col items-center">
@@ -4652,7 +4652,7 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                         {/* Named Student Section */}
                         <div className="z-10 w-full flex flex-col items-center mt-10 mb-8 px-10">
                           <span className="text-[11px] font-bold text-slate-500 tracking-[0.15em] uppercase block mb-3">NAMA PESERTA DIDIK</span>
-                          <div className="w-full border border-slate-900 rounded-[14px] py-4.5 px-6 bg-white shadow-sm flex items-center justify-center">
+                          <div className="w-full border border-slate-750 rounded-[14px] py-3 px-6 bg-white shadow-sm flex items-center justify-center">
                             <h3 className="text-[22px] font-black text-slate-950 tracking-wider uppercase leading-tight font-display text-center">
                               {printSiswa.namaSiswa}
                             </h3>
