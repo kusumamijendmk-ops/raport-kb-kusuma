@@ -4620,10 +4620,10 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                       {/* PAGE 1: COVER PAGE */}
                       <div className="print-page-break print-container bg-white border border-slate-200 rounded-2xl shadow-lg p-12 max-w-3xl mx-auto flex flex-col justify-between items-center text-center min-h-[960px] print:min-h-0 print:h-[257mm] print:w-full print:border-none print:shadow-none print:p-8 print:m-0 animate-fade-in font-sans relative">
                         {/* Outer Frame */}
-                        <div className="absolute inset-4 border border-slate-950 rounded-2xl pointer-events-none print:inset-0"></div>
+                        <div className="absolute inset-4 border-[6px] border-slate-950 rounded-2xl pointer-events-none print:inset-0"></div>
 
                         {/* Top Header Logo Representation */}
-                        <div className="z-10 mt-16 space-y-4 flex flex-col items-center">
+                        <div className="z-10 mt-8 space-y-4 flex flex-col items-center">
                           <div className={`${state.dataSekolah.logo ? 'w-48 h-32' : 'w-32 h-32 rounded-full border border-slate-200'} relative flex items-center justify-center bg-white`}>
                             {state.dataSekolah.logo ? (
                               <img src={state.dataSekolah.logo} alt="Logo" className="max-w-full max-h-full object-contain" />
@@ -4642,17 +4642,17 @@ Tuliskan ulasan dalam bahasa Indonesia yang hangat, bersahabat, profesional, pos
                         </div>
 
                         {/* Main Title Block */}
-                        <div className="z-10 space-y-4 mt-12">
+                        <div className="z-10 space-y-4 mt-6">
                           <h1 className="text-[28px] font-black text-slate-800 uppercase tracking-wider leading-none font-display">
                             LAPORAN HASIL
                           </h1>
                           <h2 className="text-[17px] font-bold text-slate-700 uppercase tracking-wide mx-auto leading-[1.6]">
-                            CAPAIAN PERKEMBANGAN PESERTA DIDIK<br/>TAMAN PENITIPAN ANAK (TPA)
+                            CAPAIAN PERKEMBANGAN PESERTA DIDIK<br/>PENDIDIKAN ANAK USIA DINI (PAUD)
                           </h2>
                         </div>
 
                         {/* Named Student Card */}
-                        <div className="z-10 w-full max-w-md space-y-8 my-auto flex-grow flex flex-col justify-center">
+                        <div className="z-10 w-full max-w-md space-y-6 flex-grow flex flex-col justify-center">
                           <div className="space-y-3">
                             <span className="text-[13px] font-bold text-slate-400 tracking-wider uppercase block">NAMA PESERTA DIDIK</span>
                             <div className="border border-slate-800 rounded-[14px] py-4 px-6 bg-white mx-8">
